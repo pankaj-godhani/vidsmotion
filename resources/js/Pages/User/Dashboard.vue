@@ -1,0 +1,529 @@
+<template>
+    <Head title="My Files" />
+
+    <div class="min-h-screen bg-black text-white">
+        <!-- Header -->
+        <header class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <!-- Logo -->
+                    <div class="flex items-center space-x-3">
+                        <Link :href="route('welcome')" class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                </svg>
+                            </div>
+                            <span class="text-xl font-bold text-white">Vidsmotion</span>
+                        </Link>
+                    </div>
+
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex items-center space-x-8">
+                        <a href="#features" class="text-gray-300 hover:text-white transition-colors text-sm">Features</a>
+                        <Link :href="route('explore')" class="text-gray-300 hover:text-white transition-colors text-sm">Explore</Link>
+                        <Link :href="route('pricing')" class="text-gray-300 hover:text-white transition-colors text-sm">Pricing</Link>
+                        <a href="#docs" class="text-gray-300 hover:text-white transition-colors text-sm">Docs</a>
+                        <div class="flex items-center space-x-4">
+                            <!-- User Dropdown -->
+                            <div class="relative">
+                                <button
+                                    @click="showUserMenu = !showUserMenu"
+                                    class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
+                                >
+                                    <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                        <span class="text-sm font-medium text-white">{{ $page.props.auth.user.name.charAt(0) }}</span>
+                                    </div>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+
+                                <!-- Dropdown Menu -->
+                                <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-gray-900 border border-gray-800 rounded-lg shadow-lg z-50">
+                                    <div class="py-1">
+                                        <div class="px-4 py-2 border-b border-gray-800">
+                                            <p class="text-sm font-medium text-white">{{ $page.props.auth.user.name }}</p>
+                                            <p class="text-xs text-gray-400">{{ $page.props.auth.user.email }}</p>
+                                        </div>
+                                        <Link
+                                            :href="route('dashboard')"
+                                            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                                            @click="showUserMenu = false"
+                                        >
+                                            Dashboard
+                                        </Link>
+                                        <Link
+                                            :href="route('video-generator')"
+                                            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                                            @click="showUserMenu = false"
+                                        >
+                                            Video Generator
+                                        </Link>
+                                        <Link
+                                            :href="route('user.dashboard')"
+                                            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                                            @click="showUserMenu = false"
+                                        >
+                                            My Files
+                                        </Link>
+                                        <div class="border-t border-gray-800"></div>
+                                        <button
+                                            @click="logout"
+                                            class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                                        >
+                                            Sign Out
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <button
+                        @click="isMenuOpen = !isMenuOpen"
+                        class="md:hidden text-white"
+                    >
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path v-if="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu -->
+                <div v-if="isMenuOpen" class="md:hidden py-4 border-t border-gray-800">
+                    <div class="flex flex-col space-y-4">
+                        <a href="#features" class="text-gray-300 hover:text-white transition-colors text-sm">Features</a>
+                        <Link :href="route('explore')" class="text-gray-300 hover:text-white transition-colors text-sm">Explore</Link>
+                        <Link :href="route('pricing')" class="text-gray-300 hover:text-white transition-colors text-sm">Pricing</Link>
+                        <a href="#docs" class="text-gray-300 hover:text-white transition-colors text-sm">Docs</a>
+                        <div class="pt-4 border-t border-gray-800">
+                            <!-- Mobile User Menu -->
+                            <div class="space-y-2">
+                                <div class="px-4 py-2 border-b border-gray-800">
+                                    <p class="text-sm font-medium text-white">{{ $page.props.auth.user.name }}</p>
+                                    <p class="text-xs text-gray-400">{{ $page.props.auth.user.email }}</p>
+                                </div>
+                                <Link
+                                    :href="route('dashboard')"
+                                    class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
+                                >
+                                    Dashboard
+                                </Link>
+                                <Link
+                                    :href="route('user.dashboard')"
+                                    class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
+                                >
+                                    My Files
+                                </Link>
+                                <button
+                                    @click="logout"
+                                    class="block w-full text-left text-gray-300 hover:text-white transition-colors text-sm py-2"
+                                >
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Header with Search and Filter -->
+        <div class="pt-16 bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="font-bold text-2xl text-white leading-tight">
+                            My Files
+                        </h2>
+                        <p class="text-gray-400 mt-1">Manage your AI-generated videos and uploads</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <!-- Search Bar -->
+                        <div class="relative">
+                            <input
+                                v-model="searchQuery"
+                                type="text"
+                                placeholder="Search files..."
+                                class="w-64 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                            />
+                            <svg class="absolute right-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <!-- Filter Dropdown -->
+                        <select
+                            v-model="statusFilter"
+                            class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500"
+                        >
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="min-h-screen bg-gray-900">
+            <!-- Background Elements -->
+            <div class="absolute inset-0 overflow-hidden">
+                <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl"></div>
+            </div>
+
+            <div class="relative z-10 py-8">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-gradient-to-r from-purple-600/20 to-blue-600/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-6 hover:border-purple-400/50 transition-all duration-300">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-300">Total Files</p>
+                                    <p class="text-3xl font-bold text-white">{{ stats.totalUploads }}</p>
+                                </div>
+                                <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-green-600/20 to-emerald-600/20 backdrop-blur-sm border border-green-500/30 rounded-2xl p-6 hover:border-green-400/50 transition-all duration-300">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-300">Completed</p>
+                                    <p class="text-3xl font-bold text-white">{{ stats.completedUploads }}</p>
+                                </div>
+                                <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 backdrop-blur-sm border border-yellow-500/30 rounded-2xl p-6 hover:border-yellow-400/50 transition-all duration-300">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-300">Processing</p>
+                                    <p class="text-3xl font-bold text-white">{{ stats.processingUploads }}</p>
+                                </div>
+                                <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-red-600/20 to-pink-600/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 hover:border-red-400/50 transition-all duration-300">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-300">Failed</p>
+                                    <p class="text-3xl font-bold text-white">{{ stats.failedUploads || 0 }}</p>
+                                </div>
+                                <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Section -->
+                    <div class="mb-8">
+                        <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8">
+                            <div class="text-center">
+                                <div class="w-20 h-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-white mb-2">Upload New File</h3>
+                                <p class="text-gray-400 mb-6">Drag and drop your file here or click to browse</p>
+
+                                <div class="relative">
+                                    <input
+                                        type="file"
+                                        @change="handleFileUpload"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        accept="*/*"
+                                        ref="fileInput"
+                                    />
+                                    <div class="border-2 border-dashed border-gray-600 rounded-xl p-8 hover:border-purple-500 transition-colors duration-300 cursor-pointer">
+                                        <div class="flex flex-col items-center">
+                                            <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                            </svg>
+                                            <p class="text-gray-300 font-medium">Choose file or drag it here</p>
+                                            <p class="text-sm text-gray-500 mt-2">Maximum file size: 100MB</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Files List -->
+                    <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-700/50">
+                            <h3 class="text-lg font-semibold text-white">Your Files</h3>
+                            <p class="text-sm text-gray-400">Manage and track your uploaded files</p>
+                        </div>
+
+                        <div v-if="filteredUploads.length === 0" class="p-12 text-center">
+                            <div class="w-16 h-16 bg-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="text-lg font-medium text-gray-300 mb-2">No files found</h4>
+                            <p class="text-gray-500">Upload your first file to get started with AI video generation</p>
+                        </div>
+
+                        <div v-else class="divide-y divide-gray-700/50">
+                            <div
+                                v-for="upload in filteredUploads"
+                                :key="upload.id"
+                                class="p-6 hover:bg-gray-700/30 transition-colors duration-200"
+                            >
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <!-- File Icon -->
+                                        <div class="w-12 h-12 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-xl flex items-center justify-center">
+                                            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </div>
+
+                                        <!-- File Info -->
+                                        <div>
+                                            <h4 class="text-white font-medium">{{ upload.original_filename }}</h4>
+                                            <div class="flex items-center space-x-4 mt-1">
+                                                <span class="text-sm text-gray-400">{{ formatFileSize(upload.file_size) }}</span>
+                                                <span class="text-sm text-gray-400">{{ formatDate(upload.created_at) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Status and Actions -->
+                                    <div class="flex items-center space-x-4">
+                                        <!-- Status Badge -->
+                                        <span :class="getStatusClass(upload.status)" class="px-3 py-1 rounded-full text-xs font-medium">
+                                            <span class="flex items-center space-x-1">
+                                                <span v-if="upload.status === 'processing'" class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                                                <span v-else-if="upload.status === 'completed'" class="w-2 h-2 bg-green-400 rounded-full"></span>
+                                                <span v-else-if="upload.status === 'failed'" class="w-2 h-2 bg-red-400 rounded-full"></span>
+                                                <span v-else class="w-2 h-2 bg-yellow-400 rounded-full"></span>
+                                                <span>{{ upload.status.charAt(0).toUpperCase() + upload.status.slice(1) }}</span>
+                                            </span>
+                                        </span>
+
+                                        <!-- Action Buttons -->
+                                        <div class="flex items-center space-x-2">
+                                            <button
+                                                @click="viewDetails(upload.id)"
+                                                class="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors duration-200"
+                                            >
+                                                View
+                                            </button>
+                                            <button
+                                                v-if="upload.status === 'completed'"
+                                                @click="downloadResult(upload.id)"
+                                                class="px-3 py-1.5 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-sm rounded-lg transition-all duration-200"
+                                            >
+                                                Download
+                                            </button>
+                                            <button
+                                                v-if="upload.status === 'failed'"
+                                                @click="retryUpload(upload.id)"
+                                                class="px-3 py-1.5 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white text-sm rounded-lg transition-all duration-200"
+                                            >
+                                                Retry
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { Head, Link, router } from '@inertiajs/vue3'
+import axios from 'axios'
+
+const showUserMenu = ref(false);
+const isMenuOpen = ref(false);
+
+const logout = () => {
+    router.post(route('logout'));
+};
+
+// Close dropdowns when clicking outside
+const closeDropdowns = (event) => {
+    if (!event.target.closest('.relative')) {
+        showUserMenu.value = false;
+    }
+    if (!event.target.closest('.md\\:hidden')) {
+        isMenuOpen.value = false;
+    }
+};
+
+// Add event listener for clicking outside
+onMounted(() => {
+    document.addEventListener('click', closeDropdowns);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', closeDropdowns);
+});
+
+const stats = ref({
+    totalUploads: 0,
+    completedUploads: 0,
+    processingUploads: 0,
+    failedUploads: 0
+})
+
+const recentUploads = ref([])
+const searchQuery = ref('')
+const statusFilter = ref('')
+const fileInput = ref(null)
+
+const filteredUploads = computed(() => {
+    let filtered = recentUploads.value
+
+    if (searchQuery.value) {
+        filtered = filtered.filter(upload =>
+            upload.original_filename.toLowerCase().includes(searchQuery.value.toLowerCase())
+        )
+    }
+
+    if (statusFilter.value) {
+        filtered = filtered.filter(upload => upload.status === statusFilter.value)
+    }
+
+    return filtered
+})
+
+const handleFileUpload = async (event) => {
+    const file = event.target.files[0]
+    if (!file) return
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+        const response = await axios.post('/api/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+
+        if (response.data.success) {
+            // Refresh the uploads list
+            loadRecentUploads()
+            loadStats()
+            // Reset file input
+            if (fileInput.value) {
+                fileInput.value.value = ''
+            }
+        }
+    } catch (error) {
+        console.error('Upload failed:', error)
+    }
+}
+
+const loadStats = async () => {
+    try {
+        const response = await axios.get('/api/user/stats')
+        stats.value = response.data.data
+    } catch (error) {
+        console.error('Failed to load stats:', error)
+    }
+}
+
+const loadRecentUploads = async () => {
+    try {
+        const response = await axios.get('/api/user/uploads')
+        recentUploads.value = response.data.data
+    } catch (error) {
+        console.error('Failed to load uploads:', error)
+    }
+}
+
+const getStatusClass = (status) => {
+    const classes = {
+        'pending': 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30',
+        'processing': 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+        'completed': 'bg-green-500/20 text-green-400 border border-green-500/30',
+        'failed': 'bg-red-500/20 text-red-400 border border-red-500/30'
+    }
+    return classes[status] || 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+}
+
+const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    })
+}
+
+const formatFileSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
+
+const viewDetails = (id) => {
+    router.visit(`/user/uploads/${id}`)
+}
+
+const downloadResult = async (id) => {
+    try {
+        const response = await axios.get(`/api/result/${id}`)
+        if (response.data.success) {
+            // Handle result download
+            console.log('Result:', response.data.data)
+        }
+    } catch (error) {
+        console.error('Failed to download result:', error)
+    }
+}
+
+const retryUpload = async (id) => {
+    try {
+        const response = await axios.post(`/api/admin/uploads/${id}/retry`)
+        if (response.data.success) {
+            loadRecentUploads()
+            loadStats()
+        }
+    } catch (error) {
+        console.error('Failed to retry upload:', error)
+    }
+}
+
+onMounted(() => {
+    loadStats()
+    loadRecentUploads()
+})
+</script>
