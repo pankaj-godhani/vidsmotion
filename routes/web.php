@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -124,6 +125,10 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
         return Inertia::render('Admin/UploadDetails', ['uploadId' => $id]);
     })->name('uploads.show');
 });
+
+// Payment API Routes
+Route::post('/api/create-razorpay-order', [PaymentController::class, 'createRazorpayOrder'])->name('payment.create-order');
+Route::post('/api/payment-success', [PaymentController::class, 'handlePaymentSuccess'])->name('payment.success');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

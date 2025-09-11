@@ -3,12 +3,17 @@
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\StatusController;
 use App\Http\Controllers\Api\ResultController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+// Payment routes
+Route::post('/create-razorpay-order', [PaymentController::class, 'createRazorpayOrder'])->name('api.create-razorpay-order');
+Route::post('/payment-success', [PaymentController::class, 'handlePaymentSuccess'])->name('api.payment-success');
 
 // API routes for file processing
 Route::middleware('auth:sanctum')->group(function () {

@@ -218,13 +218,14 @@
                                     </li>
                                 </ul>
 
-                                <Link
+                                <button
                                     v-if="canRegister"
-                                    :href="route('register')"
-                                    class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium"
+                                    @click="handleStandardSubscription"
+                                    :disabled="isPaymentLoading"
+                                    class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Subscribe Standard
-                                </Link>
+                                    {{ isPaymentLoading ? 'Processing...' : 'Subscribe Standard' }}
+                                </button>
                                 <Link
                                     v-else-if="$page.props.auth.user"
                                     :href="route('video-generator')"
@@ -290,20 +291,22 @@
                                     </li>
                                 </ul>
 
-                                <Link
+                                <button
                                     v-if="canRegister"
-                                    :href="route('register')"
-                                    class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium"
+                                    @click="handleProMonthlySubscription"
+                                    :disabled="isPaymentLoading"
+                                    class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Subscribe Pro Monthly
-                                </Link>
-                                <Link
+                                    {{ isPaymentLoading ? 'Processing...' : 'Subscribe Pro Monthly' }}
+                                </button>
+                                <button
                                     v-else-if="$page.props.auth.user"
-                                    :href="route('video-generator')"
-                                    class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium"
+                                    @click="handleProMonthlySubscription"
+                                    :disabled="isPaymentLoading"
+                                    class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Subscribe Pro Monthly
-                                </Link>
+                                    {{ isPaymentLoading ? 'Processing...' : 'Subscribe Pro Monthly' }}
+                                </button>
                             </div>
                         </div>
 
@@ -361,20 +364,22 @@
                                     </li>
                                 </ul>
 
-                                <Link
+                                <button
                                     v-if="canRegister"
-                                    :href="route('register')"
-                                    class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium"
+                                    @click="handlePremierYearlySubscription"
+                                    :disabled="isPaymentLoading"
+                                    class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Subscribe Premier yearly
-                                </Link>
-                                <Link
+                                    {{ isPaymentLoading ? 'Processing...' : 'Subscribe Premier Yearly' }}
+                                </button>
+                                <button
                                     v-else-if="$page.props.auth.user"
-                                    :href="route('video-generator')"
-                                    class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium"
+                                    @click="handlePremierYearlySubscription"
+                                    :disabled="isPaymentLoading"
+                                    class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Subscribe Premier yearly
-                                </Link>
+                                    {{ isPaymentLoading ? 'Processing...' : 'Subscribe Premier Yearly' }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -458,6 +463,7 @@
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted } from 'vue';
 import Footer from '@/Components/Footer.vue';
+import { loadRazorpayScript, createRazorpayOrder, openRazorpayPayment, handlePaymentSuccess } from '@/utils/razorpay.js';
 
 defineProps({
     canLogin: {
@@ -473,6 +479,135 @@ const showUserMenu = ref(false);
 
 const logout = () => {
     router.post(route('logout'));
+};
+
+// Razorpay payment handling
+const isPaymentLoading = ref(false);
+
+const handleStandardSubscription = async () => {
+    try {
+        isPaymentLoading.value = true;
+
+        console.log('Starting payment process...');
+
+        // Load Razorpay script
+        await loadRazorpayScript();
+        console.log('Razorpay script loaded');
+
+        // Create order for Standard plan (₹50 for 3 days)
+        const order = await createRazorpayOrder(50, 'Standard');
+
+        // Open Razorpay payment modal
+        openRazorpayPayment(
+            order,
+            'Standard Plan (3 days)',
+            async (response) => {
+                try {
+                    // Payment successful - verify with backend
+                    await handlePaymentSuccess(response, 'Standard');
+                    alert('Payment successful! Your Standard plan is now active.');
+                    router.visit(route('video-generator'));
+                } catch (error) {
+                    console.error('Payment verification failed:', error);
+                    alert(`Payment verification failed: ${error.message}`);
+                }
+            },
+            (error) => {
+                // Payment failed
+                console.error('Payment failed:', error);
+                alert(`Payment failed: ${error.description || error.message || 'Unknown error'}`);
+            }
+        );
+    } catch (error) {
+        console.error('Error processing payment:', error);
+        alert(`Error: ${error.message || 'An error occurred. Please try again.'}`);
+    } finally {
+        isPaymentLoading.value = false;
+    }
+};
+
+const handleProMonthlySubscription = async () => {
+    try {
+        isPaymentLoading.value = true;
+
+        console.log('Starting Pro Monthly payment process...');
+
+        // Load Razorpay script
+        await loadRazorpayScript();
+        console.log('Razorpay script loaded');
+
+        // Create order for Pro Monthly plan (₹100)
+        const order = await createRazorpayOrder(100, 'Pro Monthly');
+
+        // Open Razorpay payment modal
+        openRazorpayPayment(
+            order,
+            'Pro Monthly Plan',
+            async (response) => {
+                try {
+                    // Payment successful - verify with backend
+                    await handlePaymentSuccess(response, 'Pro Monthly');
+                    alert('Payment successful! Your Pro Monthly plan is now active.');
+                    router.visit(route('video-generator'));
+                } catch (error) {
+                    console.error('Payment verification failed:', error);
+                    alert(`Payment verification failed: ${error.message}`);
+                }
+            },
+            (error) => {
+                // Payment failed
+                console.error('Payment failed:', error);
+                alert(`Payment failed: ${error.description || error.message || 'Unknown error'}`);
+            }
+        );
+    } catch (error) {
+        console.error('Error processing payment:', error);
+        alert(`Error: ${error.message || 'An error occurred. Please try again.'}`);
+    } finally {
+        isPaymentLoading.value = false;
+    }
+};
+
+const handlePremierYearlySubscription = async () => {
+    try {
+        isPaymentLoading.value = true;
+
+        console.log('Starting Premier Yearly payment process...');
+
+        // Load Razorpay script
+        await loadRazorpayScript();
+        console.log('Razorpay script loaded');
+
+        // Create order for Premier Yearly plan (₹1100)
+        const order = await createRazorpayOrder(1100, 'Premier Yearly');
+
+        // Open Razorpay payment modal
+        openRazorpayPayment(
+            order,
+            'Premier Yearly Plan',
+            async (response) => {
+                try {
+                    // Payment successful - verify with backend
+                    await handlePaymentSuccess(response, 'Premier Yearly');
+                    alert('Payment successful! Your Premier Yearly plan is now active.');
+                    router.visit(route('video-generator'));
+                } catch (error) {
+                    console.error('Payment verification failed:', error);
+                    alert(`Payment verification failed: ${error.message}`);
+                }
+            },
+            (error) => {
+                // Payment failed
+                console.error('Payment failed:', error);
+                alert(`Payment failed: ${error.description || error.message || 'Unknown error'}`);
+            }
+        );
+    } catch (error) {
+        console.error('Error processing payment:', error);
+        alert(`Error: ${error.message || 'An error occurred. Please try again.'}`);
+    } finally {
+        isPaymentLoading.value = false;
+    }
 };
 
 // Close dropdowns when clicking outside
