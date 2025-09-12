@@ -1,178 +1,15 @@
 <template>
     <Head title="My Profile - Vidsmotion" />
     <div class="min-h-screen bg-black text-white">
-        <!-- Navigation -->
-        <nav class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-16">
-                    <!-- Logo -->
-                    <div class="flex items-center space-x-3">
-                        <Link :href="route('welcome')" class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                                </svg>
-                            </div>
-                            <span class="text-xl font-bold text-white">Vidsmotion</span>
-                        </Link>
-                    </div>
+        <!-- Header Menu Component -->
+        <HeaderMenu current-page="my-profile" :can-login="canLogin" :can-register="canRegister" />
 
-                    <!-- Desktop Navigation -->
-                    <div class="hidden md:flex items-center space-x-8">
-                        <Link :href="route('welcome')" class="text-gray-300 hover:text-white transition-colors text-sm">Home</Link>
-                        <Link :href="route('features')" class="text-gray-300 hover:text-white transition-colors text-sm">Features</Link>
-                        <Link :href="route('explore')" class="text-gray-300 hover:text-white transition-colors text-sm">Explore</Link>
-                        <Link :href="route('pricing')" class="text-gray-300 hover:text-white transition-colors text-sm">Pricing</Link>
-                        <div v-if="canLogin" class="flex items-center space-x-4">
-                            <template v-if="$page.props.auth.user">
                                 <!-- User Dropdown -->
-                                <div class="relative">
-                                    <button
-                                        @click="showUserMenu = !showUserMenu"
-                                        class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
-                                    >
-                                        <div class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
-                                            <img
-                                                v-if="$page.props.auth.user.avatar_url"
-                                                :src="$page.props.auth.user.avatar_url"
-                                                :alt="$page.props.auth.user.name"
-                                                class="w-full h-full object-cover"
-                                            />
-                                            <div v-else class="w-full h-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
-                                                <span class="text-sm font-medium text-white">{{ $page.props.auth.user.name.charAt(0) }}</span>
-                                            </div>
-                                        </div>
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </button>
 
                                     <!-- Dropdown Menu -->
-                                    <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-gray-900 border border-gray-800 rounded-lg shadow-lg z-50">
-                                        <div class="py-1">
-                                            <div class="px-4 py-2 border-b border-gray-800">
-                                                <p class="text-sm font-medium text-white">{{ $page.props.auth.user.name }}</p>
-                                                <p class="text-xs text-gray-400">{{ $page.props.auth.user.email }}</p>
-                                            </div>
-                                            <Link
-                                                :href="route('dashboard')"
-                                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                                                @click="showUserMenu = false"
-                                            >
-                                                Dashboard
-                                            </Link>
-                                            <Link
-                                                :href="route('video-generator')"
-                                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                                                @click="showUserMenu = false"
-                                            >
-                                                Video Generator
-                                            </Link>
-                                            <Link
-                                                :href="route('user.dashboard')"
-                                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                                                @click="showUserMenu = false"
-                                            >
-                                                My Files
-                                            </Link>
-                                            <Link
-                                                :href="route('my-profile')"
-                                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors bg-gray-800"
-                                                @click="showUserMenu = false"
-                                            >
-                                                My Profile
-                                            </Link>
-                                            <div class="border-t border-gray-800"></div>
-                                            <button
-                                                @click="logout"
-                                                class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                                            >
-                                                Sign Out
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
 
-                    <!-- Mobile Menu Button -->
-                    <button
-                        @click="isMenuOpen = !isMenuOpen"
-                        class="md:hidden text-white"
-                    >
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path v-if="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </nav>
 
-        <!-- Mobile Menu Dropdown -->
-        <div v-if="isMenuOpen" class="md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" @click="isMenuOpen = false">
-            <div class="fixed top-16 left-0 right-0 bg-gray-900 border-b border-gray-800 shadow-lg" @click.stop>
-                <div class="px-4 py-6">
-                    <!-- User Info -->
-                    <div class="flex items-center space-x-4 mb-6 pb-6 border-b border-gray-800">
-                        <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
-                            <img
-                                v-if="$page.props.auth.user.avatar_url"
-                                :src="$page.props.auth.user.avatar_url"
-                                :alt="$page.props.auth.user.name"
-                                class="w-full h-full object-cover"
-                            />
-                            <div v-else class="w-full h-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
-                                <span class="text-lg font-medium text-white">{{ $page.props.auth.user.name.charAt(0) }}</span>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-white">{{ $page.props.auth.user.name }}</p>
-                            <p class="text-xs text-gray-400">{{ $page.props.auth.user.email }}</p>
-                        </div>
-                    </div>
 
-                    <!-- Navigation Links -->
-                    <div class="space-y-2">
-                        <Link
-                            :href="route('dashboard')"
-                            class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
-                            @click="isMenuOpen = false"
-                        >
-                            Dashboard
-                        </Link>
-                        <Link
-                            :href="route('video-generator')"
-                            class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
-                            @click="isMenuOpen = false"
-                        >
-                            Video Generator
-                        </Link>
-                        <Link
-                            :href="route('user.dashboard')"
-                            class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
-                            @click="isMenuOpen = false"
-                        >
-                            My Files
-                        </Link>
-                        <Link
-                            :href="route('my-profile')"
-                            class="block text-gray-300 hover:text-white transition-colors text-sm py-2 bg-gray-800"
-                            @click="isMenuOpen = false"
-                        >
-                            My Profile
-                        </Link>
-                        <button
-                            @click="logout"
-                            class="block w-full text-left text-gray-300 hover:text-white transition-colors text-sm py-2"
-                        >
-                            Sign Out
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Main Content -->
         <div class="pt-16">
@@ -886,6 +723,7 @@
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted } from 'vue';
 import Footer from '@/Components/Footer.vue';
+import HeaderMenu from '@/Components/HeaderMenu.vue';
 import NotificationManager from '@/Components/NotificationManager.vue';
 import { showSuccess, showError, showWarning, showInfo } from '@/utils/notifications';
 
@@ -903,8 +741,7 @@ const props = defineProps({
     }
 });
 
-const isMenuOpen = ref(false);
-const showUserMenu = ref(false);
+// HeaderMenu component handles all navigation logic
 const showDeactivateModal = ref(false);
 const isDeactivating = ref(false);
 
@@ -917,9 +754,6 @@ const isDragOver = ref(false);
 const fileInput = ref(null);
 
 
-const logout = () => {
-    router.post(route('logout'));
-};
 
 // Deactivate subscription function
 const deactivateSubscription = async () => {
@@ -1051,19 +885,8 @@ const formatDate = (dateString) => {
     });
 };
 
-// Close dropdowns when clicking outside
-const closeDropdowns = (event) => {
-    if (!event.target.closest('.relative')) {
-        showUserMenu.value = false;
-    }
-    if (!event.target.closest('.md\\:hidden')) {
-        isMenuOpen.value = false;
-    }
-};
-
-// Add event listener for clicking outside
+// Initialize if needed
 onMounted(() => {
-    document.addEventListener('click', closeDropdowns);
 
     // Auto-hide flash messages after 5 seconds
     setTimeout(() => {
@@ -1073,6 +896,7 @@ onMounted(() => {
 
 // Clean up preview URL when component unmounts
 onUnmounted(() => {
+    // Cleanup if needed
     if (previewUrl.value) {
         URL.revokeObjectURL(previewUrl.value);
     }
