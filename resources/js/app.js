@@ -6,6 +6,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import CookieConsent from './Components/CookieConsent.vue';
+import NotificationManager from './Components/NotificationManager.vue';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -20,7 +21,8 @@ createInertiaApp({
         return createApp({
             render: () => h('div', [
                 h(App, props),
-                h(CookieConsent)
+                h(CookieConsent),
+                h(NotificationManager)
             ])
         })
             .use(plugin)

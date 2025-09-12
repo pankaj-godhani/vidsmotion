@@ -98,6 +98,13 @@ onUnmounted(() => {
                                         >
                                             My Files
                                         </Link>
+                                        <Link
+                                            :href="route('my-profile')"
+                                            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                                            @click="showUserMenu = false"
+                                        >
+                                            My Profile
+                                        </Link>
                                         <div class="border-t border-gray-800"></div>
                                         <button
                                             @click="logout"
@@ -148,6 +155,12 @@ onUnmounted(() => {
                                     class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
                                 >
                                     My Files
+                                </Link>
+                                <Link
+                                    :href="route('my-profile')"
+                                    class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
+                                >
+                                    My Profile
                                 </Link>
                                 <button
                                     @click="logout"

@@ -22,6 +22,16 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'avatar_url',
     ];
 
     /**
@@ -50,5 +60,19 @@ class User extends Authenticatable
     public function uploads(): HasMany
     {
         return $this->hasMany(Upload::class);
+    }
+
+    /**
+     * Get the user's avatar URL
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar) {
+            return asset('storage/avatars/' . $this->avatar);
+        }
+
+        // Generate a default avatar with user's initial
+        $initial = strtoupper(substr($this->name, 0, 1));
+        return "https://ui-avatars.com/api/?name={$initial}&background=8b5cf6&color=ffffff&size=200&bold=true";
     }
 }

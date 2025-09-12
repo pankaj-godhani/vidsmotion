@@ -13,8 +13,10 @@ export const razorpayConfig = {
 
 export const createRazorpayOrder = async (amount, planName) => {
     try {
-        // Get CSRF token
+        // Get CSRF token (required for web routes)
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        console.log('CSRF Token:', csrfToken ? 'Found' : 'Not found');
+
         if (!csrfToken) {
             throw new Error('CSRF token not found. Please refresh the page.');
         }
@@ -29,22 +31,31 @@ export const createRazorpayOrder = async (amount, planName) => {
 
         console.log('Creating Razorpay order:', { amount, planName });
 
-        // This should call your backend API to create an order
+        // Create form data for better CSRF handling
+        const formData = new FormData();
+        formData.append('_token', csrfToken);
+        formData.append('amount', amount * 100); // Razorpay expects amount in paise
+        formData.append('currency', 'INR');
+        formData.append('plan', planName);
+
+        console.log('Request data:', {
+            amount: amount * 100,
+            currency: 'INR',
+            plan: planName
+        });
+
         const response = await fetch('/api/create-razorpay-order', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({
-                amount: amount * 100, // Razorpay expects amount in paise
-                currency: 'INR',
-                plan: planName
-            })
+            credentials: 'same-origin', // Include cookies for CSRF
+            body: formData
         });
 
         console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
@@ -105,22 +116,30 @@ export const openRazorpayPayment = (order, planName, onSuccess, onError) => {
 // Helper function to handle payment success
 export const handlePaymentSuccess = async (response, planName) => {
     try {
-        // Get CSRF token
+        // Get CSRF token (required for web routes)
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
         if (!csrfToken) {
             throw new Error('CSRF token not found. Please refresh the page.');
         }
 
         console.log('Processing payment success:', response);
+        console.log('Payment data being sent:', {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+            plan: planName
+        });
 
         // Call backend to verify and process payment
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        };
+
         const verifyResponse = await fetch('/api/payment-success', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
+            headers: headers,
             body: JSON.stringify({
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
@@ -136,6 +155,18 @@ export const handlePaymentSuccess = async (response, planName) => {
 
         const result = await verifyResponse.json();
         console.log('Payment verification successful:', result);
+
+        // Handle guest user redirect
+        if (result.is_guest && result.redirect_url) {
+            console.log('Guest user payment successful, redirecting to:', result.redirect_url);
+            // Store payment info in sessionStorage for account creation
+            sessionStorage.setItem('guest_payment', JSON.stringify({
+                payment_id: result.payment_id,
+                plan: planName,
+                timestamp: new Date().toISOString()
+            }));
+        }
+
         return result;
     } catch (error) {
         console.error('Error processing payment success:', error);

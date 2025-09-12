@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\MyProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -27,9 +28,25 @@ Route::get('/features', function () {
 
 // Pricing Route
 Route::get('/pricing', function () {
+    $user = Auth::user();
+    $hasActiveSubscription = false;
+    $activeSubscription = null;
+
+    if ($user) {
+        // Check if user has an active subscription
+        $activeSubscription = \App\Models\Payment::forUser($user->id)
+            ->where('is_active', true)
+            ->where('subscription_end', '>', now())
+            ->first();
+
+        $hasActiveSubscription = $activeSubscription ? true : false;
+    }
+
     return Inertia::render('Pricing', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
+        'hasActiveSubscription' => $hasActiveSubscription,
+        'activeSubscription' => $activeSubscription,
     ]);
 })->name('pricing');
 
@@ -126,14 +143,23 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     })->name('uploads.show');
 });
 
-// Payment API Routes
-Route::post('/api/create-razorpay-order', [PaymentController::class, 'createRazorpayOrder'])->name('payment.create-order');
-Route::post('/api/payment-success', [PaymentController::class, 'handlePaymentSuccess'])->name('payment.success');
+// Payment routes (moved from api.php for CSRF compatibility)
+Route::post('/api/create-razorpay-order', [App\Http\Controllers\PaymentController::class, 'createRazorpayOrder'])->name('payment.create-order');
+Route::post('/api/payment-success', [App\Http\Controllers\PaymentController::class, 'handlePaymentSuccess'])->name('payment.success');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // My Profile page
+    Route::get('/my-profile', [MyProfileController::class, 'index'])->name('my-profile');
+        Route::post('/subscription/deactivate', [MyProfileController::class, 'deactivateSubscription'])->name('subscription.deactivate');
+        Route::post('/profile/avatar', [MyProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
+
+    // User payment routes
+    Route::get('/api/user/payments', [App\Http\Controllers\PaymentController::class, 'getUserPayments'])->name('payment.user-payments');
+    Route::get('/api/user/active-subscription', [App\Http\Controllers\PaymentController::class, 'getActiveSubscription'])->name('payment.active-subscription');
 });
 
 require __DIR__.'/auth.php';
