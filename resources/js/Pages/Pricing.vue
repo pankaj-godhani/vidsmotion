@@ -686,7 +686,7 @@ const handleStandardSubscription = async () => {
                         router.visit(route('register'));
                     } else {
                         showSuccess('Payment successful! Your Standard plan is now active.', 'Subscription Activated');
-                        router.visit(route('video-generator'));
+                router.visit(route('video-generator'));
                     }
                 } catch (error) {
                     console.error('Payment verification failed:', error);
