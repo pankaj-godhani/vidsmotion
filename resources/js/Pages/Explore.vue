@@ -2,190 +2,17 @@
     <Head title="Explore - Vidsmotion" />
 
     <div class="min-h-screen bg-black text-white">
-        <!-- Header -->
-        <header class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-16">
-                    <!-- Logo -->
-                    <div class="flex items-center space-x-3">
-                        <Link :href="route('welcome')" class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                                </svg>
-                            </div>
-                            <span class="text-xl font-bold text-white">Vidsmotion</span>
-                        </Link>
-                    </div>
-
-                    <!-- Desktop Navigation -->
-                    <div class="hidden md:flex items-center space-x-8">
-                        <Link :href="route('welcome')" class="text-gray-300 hover:text-white transition-colors text-sm">Home</Link>
-                        <Link :href="route('features')" class="text-gray-300 hover:text-white transition-colors text-sm">Features</Link>
-                        <a href="#explore" class="text-white font-medium text-sm">Explore</a>
-                        <Link :href="route('pricing')" class="text-gray-300 hover:text-white transition-colors text-sm">Pricing</Link>
-                        <div v-if="canLogin" class="flex items-center space-x-4">
-                            <template v-if="$page.props.auth.user">
-                                <!-- User Dropdown -->
-                                <div class="relative">
-                                    <button
-                                        @click="showUserMenu = !showUserMenu"
-                                        class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
-                                    >
-                                        <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
-                                            <span class="text-sm font-medium text-white">{{ $page.props.auth.user.name.charAt(0) }}</span>
-                                        </div>
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </button>
-
-                                    <!-- Dropdown Menu -->
-                                    <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-gray-900 border border-gray-800 rounded-lg shadow-lg z-50">
-                                        <div class="py-1">
-                                            <div class="px-4 py-2 border-b border-gray-800">
-                                                <p class="text-sm font-medium text-white">{{ $page.props.auth.user.name }}</p>
-                                                <p class="text-xs text-gray-400">{{ $page.props.auth.user.email }}</p>
-                                            </div>
-                                            <Link
-                                                :href="route('dashboard')"
-                                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                                                @click="showUserMenu = false"
-                                            >
-                                                Dashboard
-                                            </Link>
-                                            <Link
-                                                :href="route('video-generator')"
-                                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                                                @click="showUserMenu = false"
-                                            >
-                                                Video Generator
-                                            </Link>
-                                            <Link
-                                                :href="route('user.dashboard')"
-                                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                                                @click="showUserMenu = false"
-                                            >
-                                                My Files
-                                            </Link>
-                                            <Link
-                                                :href="route('my-profile')"
-                                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                                                @click="showUserMenu = false"
-                                            >
-                                                My Profile
-                                            </Link>
-                                            <div class="border-t border-gray-800"></div>
-                                            <button
-                                                @click="logout"
-                                                class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                                            >
-                                                Sign Out
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <Link
-                                    :href="route('login')"
-                                    class="text-gray-300 hover:text-white transition-colors text-sm"
-                                >
-                                    Sign In
-                                </Link>
-                                <Link
-                                    v-if="canRegister"
-                                    :href="route('register')"
-                                    class="px-4 py-2 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-sm font-medium"
-                                >
-                                    Get Started
-                                </Link>
-                            </template>
-                        </div>
-                    </div>
-
-                    <!-- Mobile Menu Button -->
-                    <button
-                        @click="isMenuOpen = !isMenuOpen"
-                        class="md:hidden text-white"
-                    >
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path v-if="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Mobile Menu -->
-                <div v-if="isMenuOpen" class="md:hidden py-4 border-t border-gray-800">
-                    <div class="flex flex-col space-y-4">
-                        <Link :href="route('welcome')" class="text-gray-300 hover:text-white transition-colors text-sm">Home</Link>
-                        <Link :href="route('features')" class="text-gray-300 hover:text-white transition-colors text-sm">Features</Link>
-                        <a href="#explore" class="text-white font-medium text-sm">Explore</a>
-                        <Link :href="route('pricing')" class="text-gray-300 hover:text-white transition-colors text-sm">Pricing</Link>
-                        <div v-if="canLogin" class="pt-4 border-t border-gray-800">
-                            <template v-if="$page.props.auth.user">
-                                <!-- Mobile User Menu -->
-                                <div class="space-y-2">
-                                    <div class="px-4 py-2 border-b border-gray-800">
-                                        <p class="text-sm font-medium text-white">{{ $page.props.auth.user.name }}</p>
-                                        <p class="text-xs text-gray-400">{{ $page.props.auth.user.email }}</p>
-                                    </div>
-                                    <Link
-                                        :href="route('dashboard')"
-                                        class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
-                                    >
-                                        Dashboard
-                                    </Link>
-                                    <Link
-                                        :href="route('user.dashboard')"
-                                        class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
-                                    >
-                                        My Files
-                                    </Link>
-                                    <Link
-                                        :href="route('my-profile')"
-                                        class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
-                                    >
-                                        My Profile
-                                    </Link>
-                                    <button
-                                        @click="logout"
-                                        class="block w-full text-left text-gray-300 hover:text-white transition-colors text-sm py-2"
-                                    >
-                                        Sign Out
-                                    </button>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <Link
-                                    :href="route('login')"
-                                    class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
-                                >
-                                    Sign In
-                                </Link>
-                                <Link
-                                    v-if="canRegister"
-                                    :href="route('register')"
-                                    class="block px-4 py-2 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-sm font-medium text-center mt-2"
-                                >
-                                    Get Started
-                                </Link>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <!-- Header Menu Component -->
+        <HeaderMenu current-page="explore" :can-login="canLogin" :can-register="canRegister" />
 
         <!-- Main Content -->
         <div class="pt-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <!-- Page Header -->
                 <div class="text-center mb-12">
-                    <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                    <h1 class="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight">
                         Explore
-                        <span class="block bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">AI Videos</span>
+                        <span class="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">AI Videos</span>
                     </h1>
                     <p class="text-xl text-gray-300 max-w-3xl mx-auto">
                         Discover amazing AI-generated videos created by our community. Get inspired and see what's possible with Vidsmotion.
@@ -409,6 +236,7 @@
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import Footer from '@/Components/Footer.vue';
+import HeaderMenu from '@/Components/HeaderMenu.vue';
 import NotificationManager from '@/Components/NotificationManager.vue';
 
 defineProps({

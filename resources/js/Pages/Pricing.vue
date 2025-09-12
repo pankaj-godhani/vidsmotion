@@ -31,7 +31,16 @@
                                         @click="showUserMenu = !showUserMenu"
                                         class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
                                     >
-                                        <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                        <img
+                                            v-if="$page.props.auth.user.avatar_url"
+                                            :src="$page.props.auth.user.avatar_url"
+                                            :alt="$page.props.auth.user.name"
+                                            class="w-8 h-8 rounded-full object-cover border-2 border-gray-600"
+                                        />
+                                        <div
+                                            v-else
+                                            class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center border-2 border-gray-600"
+                                        >
                                             <span class="text-sm font-medium text-white">{{ $page.props.auth.user.name.charAt(0) }}</span>
                                         </div>
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,8 +136,24 @@
                                 <!-- Mobile User Menu -->
                                 <div class="space-y-2">
                                     <div class="px-4 py-2 border-b border-gray-800">
-                                        <p class="text-sm font-medium text-white">{{ $page.props.auth.user.name }}</p>
-                                        <p class="text-xs text-gray-400">{{ $page.props.auth.user.email }}</p>
+                                        <div class="flex items-center space-x-3">
+                                            <img
+                                                v-if="$page.props.auth.user.avatar_url"
+                                                :src="$page.props.auth.user.avatar_url"
+                                                :alt="$page.props.auth.user.name"
+                                                class="w-10 h-10 rounded-full object-cover border-2 border-gray-600"
+                                            />
+                                            <div
+                                                v-else
+                                                class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center border-2 border-gray-600"
+                                            >
+                                                <span class="text-sm font-medium text-white">{{ $page.props.auth.user.name.charAt(0) }}</span>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-medium text-white">{{ $page.props.auth.user.name }}</p>
+                                                <p class="text-xs text-gray-400">{{ $page.props.auth.user.email }}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                     <Link
                                         :href="route('dashboard')"
