@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Payment;
+use App\Models\User;
 use Carbon\Carbon;
+use Razorpay\Api\Api;
 
 class PaymentController extends Controller
 {
@@ -100,6 +102,116 @@ class PaymentController extends Controller
         }
     }
 
+    /**
+     * Create Razorpay subscription for recurring payments
+     */
+    public function createRazorpaySubscription(Request $request)
+    {
+        try {
+            $request->validate([
+                'plan' => 'required|string',
+                'amount' => 'required|numeric',
+                'currency' => 'required|string'
+            ]);
+
+            // Get plan details
+            $planDetails = $this->getPlanDetails($request->plan);
+
+            if (!$planDetails['subscription_id']) {
+                return response()->json(['error' => 'Subscription plan not found'], 400);
+            }
+
+            // Initialize Razorpay API
+            $api = new Api(env('RAZORPAY_KEY_ID'), env('RAZORPAY_KEY_SECRET'));
+
+            $userId = Auth::check() ? Auth::id() : null;
+            $user = Auth::user();
+
+            // Get or create customer
+            $customerId = $this->getOrCreateCustomerId($api, $user);
+
+            // Create subscription data
+            $subscriptionData = [
+                'plan_id' => $planDetails['subscription_id'],
+                'customer_id' => $customerId,
+                'total_count' => 1, // One-time payment for now
+                'quantity' => 1,
+                'start_at' => now()->timestamp,
+                'expire_by' => now()->addDays(7)->timestamp, // 7 days buffer
+                'notify_info' => [
+                    'notify_phone' => $user->phone ?? '',
+                    'notify_email' => $user->email
+                ]
+            ];
+
+            // Create subscription in Razorpay
+            $subscription = $api->subscription->create($subscriptionData);
+
+            Log::info('Razorpay subscription created', [
+                'subscription_id' => $subscription->id,
+                'user_id' => $userId,
+                'plan' => $request->plan,
+                'amount' => $request->amount
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'subscription_id' => $subscription->id,
+                'plan_id' => $planDetails['subscription_id'],
+                'amount' => $request->amount,
+                'currency' => $request->currency,
+                'key' => env('RAZORPAY_KEY_ID'),
+                'customer_id' => $customerId
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Razorpay subscription creation failed', [
+                'error' => $e->getMessage(),
+                'plan' => $request->plan ?? 'unknown',
+                'user_id' => Auth::id()
+            ]);
+
+            return response()->json(['error' => 'Failed to create subscription'], 500);
+        }
+    }
+
+    /**
+     * Get or create customer ID in Razorpay
+     */
+    private function getOrCreateCustomerId(Api $api, User $user)
+    {
+        try {
+            // Try to find existing customer by email
+            $customers = $api->customer->all(['email' => $user->email]);
+
+            if ($customers->count > 0) {
+                return $customers->items[0]->id;
+            }
+        } catch (\Exception $e) {
+            Log::info('No existing customer found, creating new one', [
+                'user_id' => $user->id,
+                'user_email' => $user->email
+            ]);
+        }
+
+        // Create new customer
+        $customerData = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'contact' => $user->phone ?? '',
+        ];
+
+        $customer = $api->customer->create($customerData);
+
+        Log::info('New Razorpay customer created', [
+            'user_id' => $user->id,
+            'customer_id' => $customer->id,
+            'customer_email' => $customer->email
+        ]);
+
+        return $customer->id;
+    }
+
     public function handlePaymentSuccess(Request $request)
     {
         try {
@@ -155,6 +267,7 @@ class PaymentController extends Controller
                 'razorpay_payment_id' => $request->razorpay_payment_id,
                 'razorpay_order_id' => $request->razorpay_order_id,
                 'razorpay_signature' => $request->razorpay_signature,
+                'razorpay_subscription_id' => $planDetails['subscription_id'],
                 'plan_name' => $request->plan,
                 'plan_type' => $planDetails['type'],
                 'amount' => $planDetails['amount'],
@@ -166,6 +279,7 @@ class PaymentController extends Controller
                     'payment_id' => $request->razorpay_payment_id,
                     'order_id' => $request->razorpay_order_id,
                     'signature' => $request->razorpay_signature,
+                    'subscription_id' => $planDetails['subscription_id'],
                     'plan' => $request->plan,
                     'timestamp' => now()->toISOString()
                 ],
@@ -174,6 +288,7 @@ class PaymentController extends Controller
                 'subscription_start' => now(),
                 'subscription_end' => $this->calculateSubscriptionEnd($planDetails['type']),
                 'is_active' => true,
+                'auto_renew' => true,
             ]);
 
             Log::info('Payment successful and stored in database', [
@@ -215,22 +330,26 @@ class PaymentController extends Controller
             'Standard' => [
                 'type' => 'Standard',
                 'amount' => 50.00,
-                'duration_days' => 3
+                'duration_days' => 7,
+                'subscription_id' => 'sub_RGmRftCSxQxz1X'
             ],
             'Pro Monthly' => [
                 'type' => 'Pro Monthly',
                 'amount' => 100.00,
-                'duration_days' => 30
+                'duration_days' => 30,
+                'subscription_id' => 'sub_RGmS1mvLpdkjej'
             ],
             'Premier Yearly' => [
                 'type' => 'Premier Yearly',
                 'amount' => 1100.00,
-                'duration_days' => 365
+                'duration_days' => 365,
+                'subscription_id' => 'sub_RGmSOxU11fg088'
             ],
             default => [
                 'type' => 'Unknown',
                 'amount' => 0.00,
-                'duration_days' => 0
+                'duration_days' => 0,
+                'subscription_id' => null
             ]
         };
     }
@@ -243,7 +362,7 @@ class PaymentController extends Controller
         $startDate = now();
 
         return match ($planType) {
-            'Standard' => $startDate->addDays(3),
+            'Standard' => $startDate->addDays(7),
             'Pro Monthly' => $startDate->addDays(30),
             'Premier Yearly' => $startDate->addDays(365),
             default => $startDate->addDay()

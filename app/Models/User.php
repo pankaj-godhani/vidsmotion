@@ -62,6 +62,11 @@ class User extends Authenticatable
         return $this->hasMany(Upload::class);
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(\App\Models\Payment::class);
+    }
+
     /**
      * Get the user's avatar URL
      */

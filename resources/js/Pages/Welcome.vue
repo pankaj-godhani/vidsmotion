@@ -308,7 +308,7 @@ onUnmounted(() => {
                             </span>
                         </Link>
                         <Link
-                            v-if="canLogin && $page.props.auth.user"
+                            v-if="canLogin && $page.props.auth.user && $page.props.auth.activeSubscription"
                             :href="route('video-generator')"
                             class="group relative px-10 py-5 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-semibold text-lg hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25 overflow-hidden"
                         >

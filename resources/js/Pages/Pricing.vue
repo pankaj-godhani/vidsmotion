@@ -70,8 +70,8 @@
                                 </span>
                             </div>
                             <div class="text-center">
-                                <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors duration-300">3 days</h3>
-                                <p class="text-gray-400 mb-6">3 days trial</p>
+                                <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors duration-300">7 days</h3>
+                                <p class="text-gray-400 mb-6">7 days trial</p>
                                 <div class="mb-8 group-hover:scale-110 transition-transform duration-300">
                                     <span class="text-4xl font-bold text-white group-hover:text-purple-400 transition-colors duration-300">₹50</span>
                                 </div>
@@ -669,13 +669,13 @@ const handleStandardSubscription = async () => {
         await loadRazorpayScript();
         console.log('Razorpay script loaded');
 
-        // Create order for Standard plan (₹50 for 3 days)
+        // Create order for Standard plan (₹50 for 7 days)
         const order = await createRazorpayOrder(50, 'Standard');
 
         // Open Razorpay payment modal
         openRazorpayPayment(
             order,
-            'Standard Plan (3 days)',
+            'Standard Plan (7 days)',
             async (response) => {
                 try {
                     // Payment successful - verify with backend

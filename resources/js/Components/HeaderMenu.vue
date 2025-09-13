@@ -53,9 +53,9 @@
                         Pricing
                     </Link>
                     <div v-if="canLogin" class="flex items-center space-x-4">
-                        <!-- Create Video Button for logged-in users -->
+                        <!-- Create Video Button for logged-in users with active subscription -->
                         <Link
-                            v-if="$page.props.auth.user"
+                            v-if="$page.props.auth.user && $page.props.auth.activeSubscription"
                             :href="route('video-generator')"
                             class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all text-sm font-medium"
                         >
@@ -204,9 +204,9 @@
                     >
                         Pricing
                     </Link>
-                    <!-- Create Video Button for logged-in users in mobile menu -->
+                    <!-- Create Video Button for logged-in users with active subscription in mobile menu -->
                     <Link
-                        v-if="$page.props.auth.user"
+                        v-if="$page.props.auth.user && $page.props.auth.activeSubscription"
                         :href="route('video-generator')"
                         class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all text-sm font-medium text-center"
                         @click="isMenuOpen = false"

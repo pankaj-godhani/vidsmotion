@@ -33,10 +33,13 @@ Route::get('/pricing', function () {
     $activeSubscription = null;
 
     if ($user) {
-        // Check if user has an active subscription
+        // Check if user has an ACTIVE subscription that hasn't expired yet
+        // Only consider subscriptions that are both active AND not expired
         $activeSubscription = \App\Models\Payment::forUser($user->id)
-            ->where('is_active', true)
+            ->where('status', 'completed')
+            ->where('is_active', true) // Only active subscriptions
             ->where('subscription_end', '>', now())
+            ->orderBy('subscription_end', 'desc') // Get the latest subscription
             ->first();
 
         $hasActiveSubscription = $activeSubscription ? true : false;
@@ -115,7 +118,7 @@ Route::get('/dashboard', function () {
 // Video Generator Route
 Route::get('/video-generator', function () {
     return Inertia::render('VideoGenerator');
-})->middleware(['auth', 'verified'])->name('video-generator');
+})->middleware(['auth', 'verified', 'active.subscription'])->name('video-generator');
 
 // User Dashboard Routes
 Route::middleware(['auth', 'verified'])->prefix('user')->name('user.')->group(function () {
@@ -145,6 +148,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
 
 // Payment routes (moved from api.php for CSRF compatibility)
 Route::post('/api/create-razorpay-order', [App\Http\Controllers\PaymentController::class, 'createRazorpayOrder'])->name('payment.create-order');
+Route::post('/api/create-subscription', [App\Http\Controllers\PaymentController::class, 'createRazorpaySubscription'])->name('payment.create-subscription');
 Route::post('/api/payment-success', [App\Http\Controllers\PaymentController::class, 'handlePaymentSuccess'])->name('payment.success');
 
 Route::middleware('auth')->group(function () {
@@ -155,6 +159,10 @@ Route::middleware('auth')->group(function () {
     // My Profile page
     Route::get('/my-profile', [MyProfileController::class, 'index'])->name('my-profile');
         Route::post('/subscription/deactivate', [MyProfileController::class, 'deactivateSubscription'])->name('subscription.deactivate');
+        Route::post('/subscription/auto-renew', [MyProfileController::class, 'toggleAutoRenew'])->name('subscription.auto-renew');
+
+// Razorpay webhook route (should be outside auth middleware)
+Route::post('/razorpay/webhook', [App\Http\Controllers\RazorpayWebhookController::class, 'handleWebhook'])->name('razorpay.webhook');
         Route::post('/profile/avatar', [MyProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
 
     // User payment routes

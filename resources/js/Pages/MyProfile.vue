@@ -186,6 +186,12 @@
                                         </svg>
                                         Since {{ formatDate($page.props.auth.user.created_at) }}
                                     </span>
+                                    <span v-if="activeSubscription && activeSubscription.is_active" class="inline-flex items-center px-4 py-2 bg-purple-500/20 text-purple-400 rounded-full text-sm font-medium border border-purple-500/30">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Expires {{ formatDate(activeSubscription.subscription_end) }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -223,6 +229,18 @@
                                             <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
                                             Active
                                         </span>
+                                    </div>
+                                    <div v-if="activeSubscription" class="bg-gray-800/50 rounded-2xl p-4 border border-gray-700/50">
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">Subscription Expiry</label>
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-white font-medium">{{ formatDate(activeSubscription.subscription_end) }}</p>
+                                            <span v-if="activeSubscription.is_active" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                                                {{ getDaysRemaining(activeSubscription.subscription_end) }} days left
+                                            </span>
+                                            <span v-else class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-400 border border-red-500/30">
+                                                Expired
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -264,11 +282,63 @@
                                     </div>
 
                                     <div class="bg-gray-900/50 rounded-xl p-4 mb-4">
-                                        <p class="text-sm text-gray-400 mb-1">
-                                            <span v-if="activeSubscription.is_active">Expires on</span>
-                                            <span v-else>Deactivated on</span>
-                                        </p>
-                                        <p class="text-white font-medium">{{ formatDate(activeSubscription.subscription_end) }}</p>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <p class="text-sm text-gray-400">
+                                                <span v-if="activeSubscription.is_active">Expires on</span>
+                                                <span v-else>Deactivated on</span>
+                                            </p>
+                                            <div class="flex items-center text-xs text-gray-500">
+                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
+                                                {{ formatDate(activeSubscription.subscription_end) }}
+                                            </div>
+                                        </div>
+                                        <p class="text-white font-medium text-lg">{{ formatDate(activeSubscription.subscription_end) }}</p>
+                                        <div v-if="activeSubscription.is_active" class="mt-2">
+                                            <div class="flex items-center text-xs text-gray-400">
+                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                {{ getDaysRemaining(activeSubscription.subscription_end) }} days remaining
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Auto-Renew Toggle -->
+                                    <div v-if="activeSubscription.is_active" class="mb-4">
+                                        <div class="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <div>
+                                                        <h4 class="text-white font-medium">Auto-Renewal</h4>
+                                                        <p class="text-sm text-gray-400">Automatically renew your subscription when it expires</p>
+                                                    </div>
+                                                </div>
+                                                <label class="relative inline-flex items-center cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        :checked="activeSubscription.auto_renew"
+                                                        @change="toggleAutoRenew"
+                                                        class="sr-only peer"
+                                                    />
+                                                    <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-purple-500"></div>
+                                                </label>
+                                            </div>
+                                            <div class="mt-3 text-xs text-gray-400">
+                                                <span v-if="activeSubscription.auto_renew" class="text-green-400">
+                                                    ✓ Your subscription will automatically renew on {{ formatDate(activeSubscription.subscription_end) }}
+                                                </span>
+                                                <span v-else class="text-orange-400">
+                                                    ⚠ Your subscription will expire on {{ formatDate(activeSubscription.subscription_end) }} and will not auto-renew
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <button
@@ -783,6 +853,41 @@ const deactivateSubscription = async () => {
     }
 };
 
+// Toggle auto-renew function
+const toggleAutoRenew = async (event) => {
+    const autoRenew = event.target.checked;
+
+    console.log('Toggling auto-renew:', autoRenew, typeof autoRenew);
+
+    try {
+        await router.post(route('subscription.auto-renew'), {
+            auto_renew: autoRenew ? 1 : 0  // Convert boolean to integer for proper validation
+        }, {
+            onSuccess: () => {
+                // Show success notification
+                const message = autoRenew
+                    ? 'Auto-renewal has been enabled for your subscription.'
+                    : 'Auto-renewal has been disabled for your subscription.';
+                showSuccess(message);
+                // Refresh the page to update the subscription status
+                router.reload();
+            },
+            onError: (errors) => {
+                console.error('Error toggling auto-renew:', errors);
+                // Revert the toggle state
+                event.target.checked = !autoRenew;
+                // Show error notification
+                showError('Failed to update auto-renewal setting. Please try again.');
+            }
+        });
+    } catch (error) {
+        console.error('Error toggling auto-renew:', error);
+        // Revert the toggle state
+        event.target.checked = !autoRenew;
+        showError('Failed to update auto-renewal setting. Please try again.');
+    }
+};
+
 // Avatar upload methods
 const triggerFileInput = () => {
     fileInput.value?.click();
@@ -883,6 +988,16 @@ const formatDate = (dateString) => {
         month: 'long',
         day: 'numeric'
     });
+};
+
+// Calculate days remaining until expiry
+const getDaysRemaining = (dateString) => {
+    if (!dateString) return 0;
+    const expiryDate = new Date(dateString);
+    const today = new Date();
+    const timeDiff = expiryDate.getTime() - today.getTime();
+    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    return Math.max(0, daysDiff);
 };
 
 // Initialize if needed

@@ -15,6 +15,7 @@ class Payment extends Model
         'razorpay_payment_id',
         'razorpay_order_id',
         'razorpay_signature',
+        'razorpay_subscription_id',
         'plan_name',
         'plan_type',
         'amount',
@@ -28,6 +29,7 @@ class Payment extends Model
         'subscription_start',
         'subscription_end',
         'is_active',
+        'auto_renew',
     ];
 
     protected $casts = [
@@ -37,6 +39,7 @@ class Payment extends Model
         'subscription_end' => 'datetime',
         'amount' => 'decimal:2',
         'is_active' => 'boolean',
+        'auto_renew' => 'boolean',
     ];
 
     /**
@@ -53,7 +56,7 @@ class Payment extends Model
     public function getPlanDurationInDays(): int
     {
         return match ($this->plan_type) {
-            'Standard' => 3,
+            'Standard' => 7,
             'Pro Monthly' => 30,
             'Premier Yearly' => 365,
             default => 0,
