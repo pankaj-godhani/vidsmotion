@@ -13,104 +13,15 @@
 
         <!-- Main Content -->
         <div class="pt-16">
-            <!-- Hero Section with AI Video Background -->
-            <div class="relative overflow-hidden">
-                <!-- AI Video Background -->
-                <div class="absolute inset-0">
-                    <!-- AI-generated video background -->
-                    <video
-                        class="absolute inset-0 w-full h-full object-cover opacity-20"
-                        autoplay
-                        muted
-                        loop
-                        playsinline
-                        poster="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                    >
-                        <source src="https://cdn.pixabay.com/vimeo/123456789/ai-generated-123456.mp4" type="video/mp4">
-                        <!-- Fallback to AI-generated image if video fails -->
-                    </video>
-
-                    <!-- Primary AI Background Image -->
-                    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-                         style="background-image: url('https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');">
-                    </div>
-
-                    <!-- Alternative AI Background Images -->
-                    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15"
-                         style="background-image: url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');">
-                    </div>
-
-                    <!-- AI Neural Network Pattern -->
-                    <div class="absolute inset-0 opacity-5">
-                        <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
-                            <defs>
-                                <pattern id="neural-network" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                                    <circle cx="10" cy="10" r="1" fill="white" opacity="0.3"/>
-                                    <line x1="10" y1="10" x2="30" y2="10" stroke="white" stroke-width="0.5" opacity="0.2"/>
-                                    <line x1="10" y1="10" x2="10" y2="30" stroke="white" stroke-width="0.5" opacity="0.2"/>
-                                </pattern>
-                            </defs>
-                            <rect width="100%" height="100%" fill="url(#neural-network)"/>
-                        </svg>
-                    </div>
-
-                    <!-- AI Pattern Overlay -->
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-blue-900/40 to-indigo-900/40"></div>
-
-                    <!-- Animated AI Particles -->
-                    <div class="absolute inset-0">
-                        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500/15 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-blob"></div>
-                        <div class="absolute top-0 -right-4 w-72 h-72 bg-cyan-500/15 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-blob animation-delay-2000"></div>
-                        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500/15 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-blob animation-delay-4000"></div>
-                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-blob animation-delay-1000"></div>
-                    </div>
-
-                    <!-- AI Grid Pattern -->
-                    <div class="absolute inset-0 opacity-10">
-                        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0); background-size: 20px 20px;"></div>
-                    </div>
-                </div>
-
-                <!-- Header Section -->
-                <div class="relative py-20 px-4 sm:px-6 lg:px-8">
-                    <div class="max-w-6xl mx-auto">
-                        <div class="text-center mb-16">
-                            <!-- Enhanced Profile Icon with Glow Effect -->
-                            <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-600 rounded-3xl mb-8 shadow-2xl relative">
-                                <div class="absolute inset-0 bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-600 rounded-3xl blur-lg opacity-50 animate-pulse"></div>
-                                <svg class="w-12 h-12 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                </svg>
-                            </div>
-
-                            <!-- Enhanced Title with Better Contrast -->
-                            <h1 class="text-6xl md:text-7xl font-bold mb-8 relative">
-                                <span class="bg-gradient-to-r from-white via-purple-100 to-blue-100 bg-clip-text text-transparent drop-shadow-2xl">
-                                    My Profile
-                                </span>
-                                <div class="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-indigo-500/20 blur-3xl -z-10"></div>
-                            </h1>
-
-                            <!-- Enhanced Subtitle with Background -->
-                            <div class="inline-block bg-black/30 backdrop-blur-sm rounded-2xl px-8 py-4 border border-white/10">
-                                <p class="text-xl md:text-2xl text-white max-w-3xl mx-auto leading-relaxed font-medium">
-                                    Welcome back! Manage your account, view subscription details, and explore your
-                                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 font-semibold">
-                                        AI journey
-                                    </span>
-                                    with Vidsmotion.
-                                </p>
-                            </div>
-
-                            <!-- AI Status Indicator -->
-                            <div class="mt-8 flex justify-center">
-                                <div class="inline-flex items-center px-6 py-3 bg-green-500/20 border border-green-500/30 rounded-full backdrop-blur-sm">
-                                    <div class="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse"></div>
-                                    <span class="text-green-300 font-medium">AI-Powered Profile Management</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Header Section -->
+            <div class="py-20 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">
+                        My Profile
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-6 max-w-2xl mx-auto">
+                        Manage your account, view subscription details, and explore your AI journey with Vidsmotion
+                    </p>
                 </div>
             </div>
 
@@ -158,18 +69,6 @@
                             <!-- User Info -->
                             <div class="flex-1 text-center lg:text-left">
                                 <div class="flex items-center justify-center lg:justify-start mb-2">
-                                    <!-- Avatar next to name -->
-                                    <div class="w-12 h-12 rounded-full overflow-hidden mr-4 flex-shrink-0">
-                                        <img
-                                            v-if="$page.props.auth.user.avatar_url"
-                                            :src="$page.props.auth.user.avatar_url"
-                                            :alt="$page.props.auth.user.name"
-                                            class="w-full h-full object-cover"
-                                        />
-                                        <div v-else class="w-full h-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
-                                            <span class="text-lg font-bold text-white">{{ $page.props.auth.user.name.charAt(0) }}</span>
-                                        </div>
-                                    </div>
                                     <h2 class="text-3xl font-bold text-white">{{ $page.props.auth.user.name }}</h2>
                                 </div>
                                 <p class="text-lg text-gray-300 mb-4">{{ $page.props.auth.user.email }}</p>
@@ -197,56 +96,163 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- User Information -->
-                        <div class="bg-gradient-to-br from-gray-900/80 to-gray-800/80 rounded-3xl border border-gray-700/50 p-8 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300 group">
-                            <div class="flex items-center mb-6">
-                                <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                    </svg>
+                    <div class="space-y-8">
+                        <!-- Personal Information and Change Password in One Row -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <!-- Personal Information Section -->
+                            <div class="bg-gradient-to-br from-gray-900/80 to-gray-800/80 rounded-3xl border border-gray-700/50 p-8 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300 group">
+                                <div class="flex items-center justify-between mb-6">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                            </svg>
+                                        </div>
+                                        <h2 class="text-2xl font-bold text-white">Personal Information</h2>
+                                    </div>
+
+                                    <!-- Edit Button -->
+                                    <button
+                                        @click="openEditProfileModal"
+                                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-xl transition-all duration-300 text-sm font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105"
+                                    >
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
+                                        Edit
+                                    </button>
                                 </div>
-                                <h2 class="text-2xl font-bold text-white">Personal Information</h2>
+
+                                <div class="space-y-6">
+                                    <div class="grid grid-cols-1 gap-6">
+                                        <div class="bg-gray-800/50 rounded-2xl p-4 border border-gray-700/50">
+                                            <label class="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
+                                            <p class="text-white font-medium">{{ $page.props.auth.user.name }}</p>
+                                        </div>
+                                        <div class="bg-gray-800/50 rounded-2xl p-4 border border-gray-700/50">
+                                            <label class="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
+                                            <p class="text-white font-medium">{{ $page.props.auth.user.email }}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="space-y-6">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                    <div class="bg-gray-800/50 rounded-2xl p-4 border border-gray-700/50">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
-                                        <p class="text-white font-medium">{{ $page.props.auth.user.name }}</p>
+                            <!-- Change Password Section -->
+                            <div class="bg-gradient-to-br from-gray-900/80 to-gray-800/80 rounded-3xl border border-gray-700/50 p-8 backdrop-blur-sm hover:border-green-500/50 transition-all duration-300 group">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                                        </svg>
                                     </div>
-                                    <div class="bg-gray-800/50 rounded-2xl p-4 border border-gray-700/50">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
-                                        <p class="text-white font-medium">{{ $page.props.auth.user.email }}</p>
-                                    </div>
-                                    <div class="bg-gray-800/50 rounded-2xl p-4 border border-gray-700/50">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">Member Since</label>
-                                        <p class="text-white font-medium">{{ formatDate($page.props.auth.user.created_at) }}</p>
-                                    </div>
-                                    <div class="bg-gray-800/50 rounded-2xl p-4 border border-gray-700/50">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">Account Status</label>
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
-                                            <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                                            Active
-                                        </span>
-                                    </div>
-                                    <div v-if="activeSubscription" class="bg-gray-800/50 rounded-2xl p-4 border border-gray-700/50">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">Subscription Expiry</label>
-                                        <div class="flex items-center justify-between">
-                                            <p class="text-white font-medium">{{ formatDate(activeSubscription.subscription_end) }}</p>
-                                            <span v-if="activeSubscription.is_active" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-500/20 text-orange-400 border border-orange-500/30">
-                                                {{ getDaysRemaining(activeSubscription.subscription_end) }} days left
-                                            </span>
-                                            <span v-else class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-400 border border-red-500/30">
-                                                Expired
-                                            </span>
-                                        </div>
+                                    <h2 class="text-2xl font-bold text-white">Change Password</h2>
+                                </div>
+
+                                <div class="space-y-6">
+                                    <div class="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50">
+                                        <p class="text-gray-300 text-sm mb-4">
+                                            Update your password to keep your account secure. Make sure to use a strong password.
+                                        </p>
+                                        <button
+                                            @click="showChangePasswordModal = true"
+                                            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 text-sm font-medium shadow-lg hover:shadow-green-500/25 transform hover:scale-105"
+                                        >
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                                            </svg>
+                                            Change Password
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Subscription Information -->
+                        <!-- Credits and Subscription in One Row -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <!-- Video Credits Section -->
+                            <div class="bg-gradient-to-br from-gray-900/80 to-gray-800/80 rounded-3xl border border-gray-700/50 p-8 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300 group">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                        </svg>
+                                    </div>
+                                    <h2 class="text-2xl font-bold text-white">Video Credits</h2>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Current Credits -->
+                                    <div class="bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-2xl p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
+                                        <div class="flex items-center mb-4">
+                                            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center mr-4">
+                                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p class="text-base text-gray-400 mb-1">Current Balance</p>
+                                                <p class="text-3xl font-bold text-white">{{ $page.props.auth.user.credits || 0 }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center text-sm text-purple-400">
+                                            <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                                            Available for use
+                                        </div>
+                                    </div>
+
+                                    <!-- Total Used -->
+                                    <div class="bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl p-6 border border-orange-500/20 hover:border-orange-500/40 transition-all duration-300">
+                                        <div class="flex items-center mb-4">
+                                            <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center mr-4">
+                                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p class="text-base text-gray-400 mb-1">Total Used</p>
+                                                <p class="text-3xl font-bold text-orange-400">{{ $page.props.auth.user.total_credits_used || 0 }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center text-sm text-orange-400">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                            </svg>
+                                            For video generation
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Credit Usage Info -->
+                                <div class="mt-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
+                                    <div class="flex items-start space-x-3">
+                                        <svg class="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <div>
+                                            <h4 class="text-blue-400 font-medium mb-2">How Credits Work</h4>
+                                            <p class="text-sm text-gray-300 mb-3">
+                                                Each video generation uses 1 credit. Credits are automatically added when you purchase a subscription plan.
+                                            </p>
+                                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                                                <div class="bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
+                                                    <span class="text-purple-400 font-medium">Standard</span>
+                                                    <p class="text-gray-400 mt-1">200 credits</p>
+                                                </div>
+                                                <div class="bg-blue-500/10 rounded-lg p-3 border border-blue-500/20">
+                                                    <span class="text-blue-400 font-medium">Pro Monthly</span>
+                                                    <p class="text-gray-400 mt-1">500 credits</p>
+                                                </div>
+                                                <div class="bg-green-500/10 rounded-lg p-3 border border-green-500/20">
+                                                    <span class="text-green-400 font-medium">Pro Yearly</span>
+                                                    <p class="text-gray-400 mt-1">7500 credits</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Subscription Information -->
                         <div class="bg-gradient-to-br from-gray-900/80 to-gray-800/80 rounded-3xl border border-gray-700/50 p-8 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300 group">
                             <div class="flex items-center mb-6">
                                 <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
@@ -392,6 +398,7 @@
                                     </Link>
                                 </div>
                             </div>
+                        </div>
                         </div>
                     </div>
 
@@ -646,6 +653,202 @@
 
         <!-- Notification Manager -->
         <NotificationManager />
+
+        <!-- Change Password Modal -->
+        <div v-if="showChangePasswordModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl border border-gray-700/50 p-8 w-full max-w-md shadow-2xl">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Change Password</h3>
+                    </div>
+                    <button
+                        @click="closeChangePasswordModal"
+                        class="text-gray-400 hover:text-white transition-colors duration-200"
+                    >
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal Form -->
+                <form @submit.prevent="changePassword" class="space-y-6">
+                    <!-- Error Display -->
+                    <div v-if="passwordError" class="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-red-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p class="text-red-400 text-sm">{{ passwordError }}</p>
+                        </div>
+                    </div>
+
+                    <!-- New Password -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">New Password</label>
+                        <input
+                            v-model="changePasswordForm.password"
+                            type="password"
+                            required
+                            minlength="8"
+                            class="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300"
+                            placeholder="Enter your new password"
+                        />
+                    </div>
+
+                    <!-- Confirm New Password -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Confirm New Password</label>
+                        <input
+                            v-model="changePasswordForm.password_confirmation"
+                            type="password"
+                            required
+                            minlength="8"
+                            class="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300"
+                            placeholder="Confirm your new password"
+                        />
+                    </div>
+
+                    <!-- Password Requirements -->
+                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
+                        <h4 class="text-blue-400 font-medium mb-2">Password Requirements:</h4>
+                        <ul class="text-sm text-gray-300 space-y-1">
+                            <li>• At least 8 characters long</li>
+                            <li>• Mix of letters, numbers, and symbols</li>
+                            <li>• Strong and secure password</li>
+                        </ul>
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="flex space-x-4 pt-4">
+                        <button
+                            type="button"
+                            @click="closeChangePasswordModal"
+                            class="flex-1 px-6 py-3 bg-gray-700/50 hover:bg-gray-700 text-white rounded-xl transition-all duration-300 font-medium"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            :disabled="isChangingPassword"
+                            class="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-600 disabled:to-gray-700 text-white rounded-xl transition-all duration-300 font-medium shadow-lg hover:shadow-green-500/25 transform hover:scale-105 disabled:transform-none disabled:shadow-none"
+                        >
+                            <span v-if="isChangingPassword" class="flex items-center justify-center">
+                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Updating...
+                            </span>
+                            <span v-else>Update Password</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div v-if="showEditProfileModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl border border-gray-700/50 p-8 w-full max-w-md shadow-2xl">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Edit Profile</h3>
+                    </div>
+                    <button
+                        @click="closeEditProfileModal"
+                        class="text-gray-400 hover:text-white transition-colors duration-200"
+                    >
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal Form -->
+                <form @submit.prevent="updateProfile" class="space-y-6">
+                    <!-- Error Display -->
+                    <div v-if="profileError" class="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-red-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p class="text-red-400 text-sm">{{ profileError }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Full Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                        <input
+                            v-model="editProfileForm.name"
+                            type="text"
+                            required
+                            class="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300"
+                            placeholder="Enter your full name"
+                        />
+                    </div>
+
+                    <!-- Email Address -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+                        <input
+                            v-model="editProfileForm.email"
+                            type="email"
+                            required
+                            class="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300"
+                            placeholder="Enter your email address"
+                        />
+                    </div>
+
+                    <!-- Information Note -->
+                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
+                        <h4 class="text-blue-400 font-medium mb-2">Important:</h4>
+                        <ul class="text-sm text-gray-300 space-y-1">
+                            <li>• Your name will be displayed on your profile</li>
+                            <li>• Email address is used for account notifications</li>
+                            <li>• Changes will be saved immediately</li>
+                        </ul>
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="flex space-x-4 pt-4">
+                        <button
+                            type="button"
+                            @click="closeEditProfileModal"
+                            class="flex-1 px-6 py-3 bg-gray-700/50 hover:bg-gray-700 text-white rounded-xl transition-all duration-300 font-medium"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            :disabled="isUpdatingProfile"
+                            class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 disabled:from-gray-600 disabled:to-gray-700 text-white rounded-xl transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 disabled:transform-none disabled:shadow-none"
+                        >
+                            <span v-if="isUpdatingProfile" class="flex items-center justify-center">
+                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Updating...
+                            </span>
+                            <span v-else>Update Profile</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -790,7 +993,7 @@
 </style>
 
 <script setup>
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted } from 'vue';
 import Footer from '@/Components/Footer.vue';
 import HeaderMenu from '@/Components/HeaderMenu.vue';
@@ -811,9 +1014,30 @@ const props = defineProps({
     }
 });
 
+// Get page data
+const page = usePage();
+
 // HeaderMenu component handles all navigation logic
 const showDeactivateModal = ref(false);
 const isDeactivating = ref(false);
+
+// Edit profile functionality
+const showEditProfileModal = ref(false);
+const isUpdatingProfile = ref(false);
+const profileError = ref('');
+const editProfileForm = ref({
+    name: '',
+    email: ''
+});
+
+// Change password functionality
+const showChangePasswordModal = ref(false);
+const isChangingPassword = ref(false);
+const passwordError = ref('');
+const changePasswordForm = ref({
+    password: '',
+    password_confirmation: ''
+});
 
 // Avatar upload functionality
 const showAvatarUpload = ref(false);
@@ -851,6 +1075,142 @@ const deactivateSubscription = async () => {
     } finally {
         isDeactivating.value = false;
     }
+};
+
+// Change password function
+const changePassword = async () => {
+    // Clear any previous errors
+    passwordError.value = '';
+
+    // Client-side validation
+    if (changePasswordForm.value.password !== changePasswordForm.value.password_confirmation) {
+        passwordError.value = 'Passwords do not match. Please make sure both password fields are identical.';
+        return;
+    }
+
+    if (changePasswordForm.value.password.length < 8) {
+        passwordError.value = 'Password must be at least 8 characters long.';
+        return;
+    }
+
+    isChangingPassword.value = true;
+
+    try {
+        await router.put(route('password.update'), changePasswordForm.value, {
+            onSuccess: () => {
+                showChangePasswordModal.value = false;
+                // Reset form
+                changePasswordForm.value = {
+                    password: '',
+                    password_confirmation: ''
+                };
+                // Show success notification
+                showSuccess('Your password has been updated successfully.');
+            },
+            onError: (errors) => {
+                console.error('Error changing password:', errors);
+                // Show specific error messages in popup
+                if (errors.password) {
+                    passwordError.value = 'Password error: ' + errors.password[0];
+                } else if (errors.password_confirmation) {
+                    passwordError.value = 'Password confirmation error: ' + errors.password_confirmation[0];
+                } else {
+                    passwordError.value = 'Failed to update password. Please check your password requirements and try again.';
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error changing password:', error);
+        passwordError.value = 'Failed to update password. Please try again.';
+    } finally {
+        isChangingPassword.value = false;
+    }
+};
+
+// Close change password modal
+const closeChangePasswordModal = () => {
+    showChangePasswordModal.value = false;
+    // Clear error
+    passwordError.value = '';
+    // Reset form
+    changePasswordForm.value = {
+        password: '',
+        password_confirmation: ''
+    };
+};
+
+// Edit profile functions
+const openEditProfileModal = () => {
+    // Initialize form with current user data
+    editProfileForm.value = {
+        name: page.props.auth.user.name,
+        email: page.props.auth.user.email
+    };
+    profileError.value = '';
+    showEditProfileModal.value = true;
+};
+
+const updateProfile = async () => {
+    // Clear any previous errors
+    profileError.value = '';
+
+    // Client-side validation
+    if (!editProfileForm.value.name.trim()) {
+        profileError.value = 'Name is required.';
+        return;
+    }
+
+    if (!editProfileForm.value.email.trim()) {
+        profileError.value = 'Email is required.';
+        return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(editProfileForm.value.email)) {
+        profileError.value = 'Please enter a valid email address.';
+        return;
+    }
+
+    isUpdatingProfile.value = true;
+
+    try {
+        await router.patch(route('profile.update'), editProfileForm.value, {
+            onSuccess: () => {
+                showEditProfileModal.value = false;
+                // Show success notification
+                showSuccess('Your profile has been updated successfully.');
+                // Backend will redirect to my-profile page automatically
+            },
+            onError: (errors) => {
+                console.error('Error updating profile:', errors);
+                // Show specific error messages in popup
+                if (errors.name) {
+                    profileError.value = 'Name error: ' + errors.name[0];
+                } else if (errors.email) {
+                    profileError.value = 'Email error: ' + errors.email[0];
+                } else {
+                    profileError.value = 'Failed to update profile. Please try again.';
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        profileError.value = 'Failed to update profile. Please try again.';
+    } finally {
+        isUpdatingProfile.value = false;
+    }
+};
+
+const closeEditProfileModal = () => {
+    showEditProfileModal.value = false;
+    // Clear error
+    profileError.value = '';
+    // Reset form
+    editProfileForm.value = {
+        name: '',
+        email: ''
+    };
 };
 
 // Toggle auto-renew function
@@ -1017,3 +1377,4 @@ onUnmounted(() => {
     }
 });
 </script>
+

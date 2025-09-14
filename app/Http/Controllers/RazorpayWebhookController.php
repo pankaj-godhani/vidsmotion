@@ -131,10 +131,27 @@ class RazorpayWebhookController extends Controller
             ])
         ]);
 
+        // Assign credits to user for subscription renewal
+        $user = \App\Models\User::find($paymentRecord->user_id);
+        if ($user) {
+            $creditsToAdd = \App\Models\User::getCreditsForPlan($paymentRecord->plan);
+            if ($creditsToAdd > 0) {
+                $user->addCredits($creditsToAdd, "Subscription renewal: {$paymentRecord->plan}");
+
+                Log::info('Credits assigned for subscription renewal', [
+                    'user_id' => $user->id,
+                    'plan' => $paymentRecord->plan,
+                    'credits_added' => $creditsToAdd,
+                    'new_balance' => $user->fresh()->credits
+                ]);
+            }
+        }
+
         Log::info('Payment record updated for subscription charged', [
             'payment_id' => $paymentRecord->id,
             'user_id' => $paymentRecord->user_id,
-            'subscription_end' => $paymentRecord->subscription_end
+            'subscription_end' => $paymentRecord->subscription_end,
+            'credits_assigned' => $user ? \App\Models\User::getCreditsForPlan($paymentRecord->plan) : 0
         ]);
 
         // TODO: Send success notification to user

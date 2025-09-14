@@ -1,2 +1,38 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://vidsmotion.com/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /my-profile/
+Disallow: /video-generator/
+Disallow: /api/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /node_modules/
+Disallow: /tests/
+Disallow: /database/
+Disallow: /app/
+Disallow: /bootstrap/
+Disallow: /config/
+Disallow: /resources/
+Disallow: /routes/
+Disallow: /public/build/
+Disallow: /public/hot
+Disallow: /public/storage/
+
+# Allow important pages
+Allow: /
+Allow: /features
+Allow: /pricing
+Allow: /explore
+Allow: /contact
+Allow: /faq
+Allow: /privacy
+Allow: /terms
+
+# Crawl delay (optional)
+Crawl-delay: 1

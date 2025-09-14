@@ -33,6 +33,13 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+    Route::get('password-reset-success', function () {
+        $email = session('reset_email', 'your account');
+        return Inertia::render('Auth/PasswordResetSuccess', [
+            'email' => $email,
+        ]);
+    })->name('password.reset.success');
 });
 
 Route::middleware('auth')->group(function () {

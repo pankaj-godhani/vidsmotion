@@ -291,6 +291,21 @@ class PaymentController extends Controller
                 'auto_renew' => true,
             ]);
 
+            // Assign credits to user if authenticated
+            if ($user) {
+                $creditsToAdd = \App\Models\User::getCreditsForPlan($request->plan);
+                if ($creditsToAdd > 0) {
+                    $user->addCredits($creditsToAdd, "Plan purchase: {$request->plan}");
+
+                    Log::info('Credits assigned to user', [
+                        'user_id' => $userId,
+                        'plan' => $request->plan,
+                        'credits_added' => $creditsToAdd,
+                        'new_balance' => $user->fresh()->credits
+                    ]);
+                }
+            }
+
             Log::info('Payment successful and stored in database', [
                 'payment_id' => $request->razorpay_payment_id,
                 'order_id' => $request->razorpay_order_id,
@@ -299,6 +314,7 @@ class PaymentController extends Controller
                 'is_guest' => $isGuest,
                 'payment_record_id' => $payment->id,
                 'subscription_end' => $payment->subscription_end,
+                'credits_assigned' => $user ? \App\Models\User::getCreditsForPlan($request->plan) : 0,
                 'ip_address' => $request->ip()
             ]);
 

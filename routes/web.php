@@ -2,27 +2,36 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MyProfileController;
+use App\Http\Controllers\SitemapController;
+use App\Services\SeoService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 Route::get('/', function () {
+    $seoData = SeoService::getPageSeo('home');
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'seo' => $seoData,
     ]);
 })->name('welcome');
 
 // Features Route
 Route::get('/features', function () {
+    $seoData = SeoService::getPageSeo('features');
+
     return Inertia::render('Features', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'seo' => $seoData,
     ]);
 })->name('features');
 
@@ -45,59 +54,97 @@ Route::get('/pricing', function () {
         $hasActiveSubscription = $activeSubscription ? true : false;
     }
 
+    $seoData = SeoService::getPageSeo('pricing');
+
     return Inertia::render('Pricing', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'hasActiveSubscription' => $hasActiveSubscription,
         'activeSubscription' => $activeSubscription,
+        'seo' => $seoData,
     ]);
 })->name('pricing');
 
 // Explore Route
 Route::get('/explore', function () {
+    $user = Auth::user();
+    $hasActiveSubscription = false;
+    $activeSubscription = null;
+
+    if ($user) {
+        $activeSubscription = \App\Models\Payment::forUser($user->id)
+            ->where('status', 'completed')
+            ->where('is_active', true)
+            ->where('subscription_end', '>', now())
+            ->orderBy('subscription_end', 'desc')
+            ->first();
+
+        $hasActiveSubscription = $activeSubscription ? true : false;
+    }
+
+    $seoData = SeoService::getPageSeo('explore');
+
     return Inertia::render('Explore', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
+        'auth' => [
+            'user' => $user
+        ],
+        'hasActiveSubscription' => $hasActiveSubscription,
+        'activeSubscription' => $activeSubscription,
+        'seo' => $seoData,
     ]);
 })->name('explore');
 
 // Terms & Conditions Route
 Route::get('/terms', function () {
+    $seoData = SeoService::getPageSeo('terms');
+
     return Inertia::render('Terms', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'seo' => $seoData,
     ]);
 })->name('terms');
 
 // Contact Us Route
 Route::get('/contact', function () {
+    $seoData = SeoService::getPageSeo('contact');
+
     return Inertia::render('Contact', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'seo' => $seoData,
     ]);
 })->name('contact');
 
 // Privacy Policy Route
 Route::get('/privacy', function () {
+    $seoData = SeoService::getPageSeo('privacy');
+
     return Inertia::render('Privacy', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'seo' => $seoData,
     ]);
 })->name('privacy');
 
 // FAQ Route
 Route::get('/faq', function () {
+    $seoData = SeoService::getPageSeo('faq');
+
     return Inertia::render('FAQ', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'seo' => $seoData,
     ]);
 })->name('faq');
 
@@ -116,9 +163,26 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Video Generator Route
-Route::get('/video-generator', function () {
-    return Inertia::render('VideoGenerator');
+Route::get('/video-generator', function (Request $request) {
+    $recreateData = null;
+
+    // Check if this is a recreate request
+    if ($request->has('recreate') && $request->get('recreate') === 'true') {
+        // Get recreate data from session storage (set by frontend)
+        $recreateIntent = session()->get('recreate_intent');
+        if ($recreateIntent) {
+            $recreateData = json_decode($recreateIntent, true);
+        }
+    }
+
+    return Inertia::render('VideoGenerator', [
+        'recreateData' => $recreateData,
+        'isRecreateMode' => $request->has('recreate') && $request->get('recreate') === 'true'
+    ]);
 })->middleware(['auth', 'verified', 'active.subscription'])->name('video-generator');
+
+// SEO Routes
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // User Dashboard Routes
 Route::middleware(['auth', 'verified'])->prefix('user')->name('user.')->group(function () {

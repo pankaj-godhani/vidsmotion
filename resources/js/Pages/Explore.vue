@@ -19,26 +19,6 @@
                     </p>
                 </div>
 
-                <!-- Tabs Navigation -->
-                <div class="flex justify-center mb-12">
-                    <div class="bg-gray-900 rounded-2xl p-2 border border-gray-800">
-                        <div class="flex space-x-2">
-                            <button
-                                v-for="tab in tabs"
-                                :key="tab.id"
-                                @click="activeTab = tab.id"
-                                :class="[
-                                    'px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200',
-                                    activeTab === tab.id
-                                        ? 'bg-white text-black shadow-lg'
-                                        : 'text-gray-400 hover:text-white hover:bg-gray-800'
-                                ]"
-                            >
-                                {{ tab.name }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Filter and Sort Bar -->
                 <div class="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
@@ -102,10 +82,9 @@
                     <div
                         v-for="video in filteredVideos"
                         :key="video.id"
-                        class="group cursor-pointer"
-                        @click="openVideoModal(video)"
+                        class="group cursor-pointer bg-gray-900/50 rounded-2xl p-4 border border-gray-800 hover:border-gray-600 transition-all duration-300 hover:bg-gray-900/70"
                     >
-                        <div class="relative aspect-video bg-gray-900 rounded-2xl overflow-hidden border border-gray-800 hover:border-gray-600 transition-all duration-300 group-hover:scale-105">
+                        <div class="relative aspect-video bg-gray-900 rounded-xl overflow-hidden border border-gray-700 hover:border-gray-500 transition-all duration-300 group-hover:scale-[1.02] mb-4" @click="openVideoModal(video)">
                             <!-- Video Thumbnail -->
                             <div class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-blue-500/20"></div>
                             <img
@@ -128,14 +107,21 @@
                                 {{ video.duration }}
                             </div>
 
+                            <!-- Category Badge -->
+                            <div class="absolute top-3 left-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs px-2 py-1 rounded-full font-medium">
+                                {{ video.category }}
+                            </div>
+
                         </div>
 
                         <!-- Video Info -->
                         <div class="mt-4">
-                            <h3 class="text-white font-semibold text-lg mb-2 line-clamp-2 group-hover:text-purple-300 transition-colors">
+                            <h3 class="text-white font-semibold text-lg mb-3 line-clamp-2 group-hover:text-purple-300 transition-colors">
                                 {{ video.title }}
                             </h3>
-                            <div class="flex items-center justify-between text-sm text-gray-400">
+
+                            <!-- Author and Stats -->
+                            <div class="flex items-center justify-between text-sm text-gray-400 mb-3">
                                 <div class="flex items-center space-x-2">
                                     <div class="w-6 h-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
                                         <span class="text-xs font-bold text-white">{{ video.author.charAt(0) }}</span>
@@ -152,6 +138,17 @@
                                     </span>
                                 </div>
                             </div>
+
+                            <!-- Recreate Button -->
+                            <button
+                                @click.stop="recreateVideo(video)"
+                                class="w-full px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium text-sm transition-all duration-200 flex items-center justify-center space-x-2 group/btn"
+                            >
+                                <svg class="w-4 h-4 group-hover/btn:rotate-12 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                <span>Recreate</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -211,6 +208,15 @@
                                 </div>
                             </div>
                             <div class="flex items-center space-x-4">
+                                <button
+                                    @click="recreateVideo(selectedVideo)"
+                                    class="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg transition-all duration-200"
+                                >
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                    </svg>
+                                    <span>Recreate</span>
+                                </button>
                                 <button class="flex items-center space-x-2 px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
@@ -233,7 +239,7 @@
 </template>
 
 <script setup>
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import Footer from '@/Components/Footer.vue';
 import HeaderMenu from '@/Components/HeaderMenu.vue';
@@ -246,10 +252,24 @@ defineProps({
     canRegister: {
         type: Boolean,
     },
+    auth: {
+        type: Object,
+        default: () => ({})
+    },
+    hasActiveSubscription: {
+        type: Boolean,
+        default: false
+    },
+    activeSubscription: {
+        type: Object,
+        default: null
+    },
 });
 
+// Get page props using usePage
+const page = usePage();
+
 // Reactive data
-const activeTab = ref('videos');
 const activeFilter = ref('all');
 const sortBy = ref('latest');
 const selectedVideo = ref(null);
@@ -258,13 +278,6 @@ const isSorting = ref(false);
 const isMenuOpen = ref(false);
 const showUserMenu = ref(false);
 
-// Tabs
-const tabs = ref([
-    { id: 'videos', name: 'Videos' },
-    { id: 'trending', name: 'Trending' },
-    { id: 'featured', name: 'Featured' },
-    { id: 'recent', name: 'Recent' }
-]);
 
 // Filters
 const filters = ref([
@@ -443,6 +456,63 @@ const openVideoModal = (video) => {
 
 const closeVideoModal = () => {
     selectedVideo.value = null;
+};
+
+const recreateVideo = (video) => {
+    console.log('Recreate button clicked for video:', video);
+    console.log('Video type:', typeof video);
+    console.log('Video keys:', video ? Object.keys(video) : 'video is null/undefined');
+    console.log('Page props:', page.props);
+    console.log('Auth user:', page.props.auth?.user);
+    console.log('Has active subscription:', page.props.hasActiveSubscription);
+
+    // Check if video object is valid
+    if (!video || !video.id) {
+        console.error('Invalid video object:', video);
+        return;
+    }
+
+    // Store recreate intent data
+    const recreateData = {
+        video_id: video.id,
+        video_title: video.title,
+        video_category: video.category,
+        video_url: video.videoUrl,
+        thumbnail: video.thumbnail,
+        author: video.author,
+        duration: video.duration,
+        views: video.views,
+        timestamp: new Date().toISOString()
+    };
+
+    // Check if user is authenticated
+    if (!page.props.auth?.user) {
+        console.log('User not authenticated, redirecting to login');
+        // Redirect to login with recreate intent
+        sessionStorage.setItem('recreate_intent', JSON.stringify(recreateData));
+        router.visit(route('login'));
+        return;
+    }
+
+    // Check if user has active subscription
+    if (!page.props.hasActiveSubscription) {
+        console.log('User has no active subscription, redirecting to pricing');
+        // Redirect to pricing page with recreate intent
+        sessionStorage.setItem('recreate_intent', JSON.stringify(recreateData));
+        router.visit(route('pricing'));
+        return;
+    }
+
+    console.log('User authenticated and has subscription, redirecting to video generator');
+    // Store recreate intent for video generator
+    sessionStorage.setItem('recreate_intent', JSON.stringify(recreateData));
+
+    // Try different approaches to redirect
+    console.log('Route URL:', route('video-generator'));
+    console.log('Route with params:', route('video-generator', { recreate: 'true' }));
+
+    // Redirect to video generator with recreate parameters
+    window.location.href = route('video-generator', { recreate: 'true' });
 };
 
 
@@ -629,5 +699,27 @@ onUnmounted(() => {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #7c3aed;
+}
+
+/* Enhanced card hover effects */
+.group:hover .group-hover\:scale-\[1\.02\] {
+    transform: scale(1.02);
+}
+
+/* Recreate button hover effects */
+.group\/btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.4);
+}
+
+/* Category badge styling */
+.bg-gradient-to-r {
+    background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+/* Enhanced video card styling */
+.group:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
 }
 </style>

@@ -81,19 +81,25 @@
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0 group-hover:text-purple-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="text-gray-300 group-hover:text-white transition-colors duration-300">5 video generations per month</span>
+                                        <span class="text-gray-300 group-hover:text-white transition-colors duration-300">4 video generations per Plan</span>
                                     </li>
                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="text-gray-300">Up to 5 seconds per video</span>
+                                        <span class="text-gray-300">Up to 6 seconds per video</span>
                                     </li>
                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="text-gray-300">Standard quality</span>
+                                        <span class="text-gray-300">200 credits available</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span class="text-gray-300">High quality output</span>
                                     </li>
                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,6 +107,7 @@
                                         </svg>
                                         <span class="text-gray-300">Community support</span>
                                     </li>
+
                                 </ul>
 
                                 <button
@@ -175,13 +182,19 @@
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="text-gray-300">100 video generations per month</span>
+                                        <span class="text-gray-300">10 video generations per month</span>
                                     </li>
                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="text-gray-300">Up to 10 seconds per video</span>
+                                        <span class="text-gray-300">Up to 06 seconds per video</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span class="text-gray-300">500 credits available</span>
                                     </li>
                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -201,12 +214,7 @@
                                         </svg>
                                         <span class="text-gray-300">Email support</span>
                                     </li>
-                                    <li class="flex items-center">
-                                        <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        <span class="text-gray-300">Commercial license</span>
-                                    </li>
+
                                 </ul>
 
                                 <button
@@ -274,19 +282,25 @@
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="text-gray-300">Unlimited video generations</span>
+                                        <span class="text-gray-300">150 video generations per month</span>
                                     </li>
                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="text-gray-300">Up to 15 seconds per video</span>
+                                        <span class="text-gray-300">Up to 06 seconds per video</span>
                                     </li>
                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="text-gray-300">Ultra high quality</span>
+                                        <span class="text-gray-300">1500 credits Available</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span class="text-gray-300">High quality output</span>
                                     </li>
                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -300,12 +314,7 @@
                                         </svg>
                                         <span class="text-gray-300">24/7 priority support</span>
                                     </li>
-                                    <li class="flex items-center">
-                                        <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        <span class="text-gray-300">Team collaboration</span>
-                                    </li>
+
                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
