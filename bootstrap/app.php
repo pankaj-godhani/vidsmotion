@@ -25,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Ensure API routes don't have CSRF protection
         $middleware->api(prepend: [
-            // Remove CSRF middleware from API routes
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
 
         $middleware->alias([

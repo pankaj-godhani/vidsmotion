@@ -55,13 +55,13 @@
                     <div v-if="canLogin" class="flex items-center space-x-4">
                         <!-- Create Video Button for logged-in users with active subscription -->
                         <Link
-                            v-if="$page.props.auth.user && $page.props.auth.activeSubscription"
+                            v-if="page.props.auth.user && page.props.auth.activeSubscription"
                             :href="route('video-generator')"
                             class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all text-sm font-medium"
                         >
                             Create Video
                         </Link>
-                        <template v-if="$page.props.auth.user">
+                        <template v-if="page.props.auth.user">
                             <!-- User Dropdown -->
                             <div class="relative">
                                 <button
@@ -69,16 +69,16 @@
                                     class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
                                 >
                                     <img
-                                        v-if="$page.props.auth.user.avatar_url"
-                                        :src="$page.props.auth.user.avatar_url"
-                                        :alt="$page.props.auth.user.name"
+                                        v-if="page.props.auth.user.avatar_url"
+                                        :src="page.props.auth.user.avatar_url"
+                                        :alt="page.props.auth.user.name"
                                         class="w-8 h-8 rounded-full object-cover border-2 border-gray-600"
                                     />
                                     <div
                                         v-else
                                         class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center border-2 border-gray-600"
                                     >
-                                        <span class="text-sm font-medium text-white">{{ $page.props.auth.user.name.charAt(0) }}</span>
+                                        <span class="text-sm font-medium text-white">{{ page.props.auth.user.name.charAt(0) }}</span>
                                     </div>
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -89,16 +89,9 @@
                                 <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-gray-900 border border-gray-800 rounded-lg shadow-lg z-50">
                                     <div class="py-1">
                                         <div class="px-4 py-2 border-b border-gray-800">
-                                            <p class="text-sm font-medium text-white">{{ $page.props.auth.user.name }}</p>
-                                            <p class="text-xs text-gray-400">{{ $page.props.auth.user.email }}</p>
+                                            <p class="text-sm font-medium text-white">{{ page.props.auth.user.name }}</p>
+                                            <p class="text-xs text-gray-400">{{ page.props.auth.user.email }}</p>
                                         </div>
-                                        <Link
-                                            :href="route('dashboard')"
-                                            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                                            @click="showUserMenu = false"
-                                        >
-                                            Dashboard
-                                        </Link>
                                         <Link
                                             :href="route('video-generator')"
                                             class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
@@ -107,7 +100,7 @@
                                             Video Generator
                                         </Link>
                                         <Link
-                                            :href="route('user.dashboard')"
+                                            :href="route('my-files')"
                                             class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
                                             @click="showUserMenu = false"
                                         >
@@ -206,7 +199,7 @@
                     </Link>
                     <!-- Create Video Button for logged-in users with active subscription in mobile menu -->
                     <Link
-                        v-if="$page.props.auth.user && $page.props.auth.activeSubscription"
+                        v-if="page.props.auth.user && page.props.auth.activeSubscription"
                         :href="route('video-generator')"
                         class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all text-sm font-medium text-center"
                         @click="isMenuOpen = false"
@@ -214,36 +207,29 @@
                         Create Video
                     </Link>
                     <div v-if="canLogin" class="pt-4 border-t border-gray-800">
-                        <template v-if="$page.props.auth.user">
+                        <template v-if="page.props.auth.user">
                             <!-- Mobile User Menu -->
                             <div class="space-y-2">
                                 <div class="px-4 py-2 border-b border-gray-800">
                                     <div class="flex items-center space-x-3">
                                         <img
-                                            v-if="$page.props.auth.user.avatar_url"
-                                            :src="$page.props.auth.user.avatar_url"
-                                            :alt="$page.props.auth.user.name"
+                                            v-if="page.props.auth.user.avatar_url"
+                                            :src="page.props.auth.user.avatar_url"
+                                            :alt="page.props.auth.user.name"
                                             class="w-10 h-10 rounded-full object-cover border-2 border-gray-600"
                                         />
                                         <div
                                             v-else
                                             class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center border-2 border-gray-600"
                                         >
-                                            <span class="text-sm font-medium text-white">{{ $page.props.auth.user.name.charAt(0) }}</span>
+                                            <span class="text-sm font-medium text-white">{{ page.props.auth.user.name.charAt(0) }}</span>
                                         </div>
                                         <div>
-                                            <p class="text-sm font-medium text-white">{{ $page.props.auth.user.name }}</p>
-                                            <p class="text-xs text-gray-400">{{ $page.props.auth.user.email }}</p>
+                                            <p class="text-sm font-medium text-white">{{ page.props.auth.user.name }}</p>
+                                            <p class="text-xs text-gray-400">{{ page.props.auth.user.email }}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <Link
-                                    :href="route('dashboard')"
-                                    class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
-                                    @click="isMenuOpen = false"
-                                >
-                                    Dashboard
-                                </Link>
                                 <Link
                                     :href="route('video-generator')"
                                     class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
@@ -252,7 +238,7 @@
                                     Video Generator
                                 </Link>
                                 <Link
-                                    :href="route('user.dashboard')"
+                                    :href="route('my-files')"
                                     class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
                                     @click="isMenuOpen = false"
                                 >
@@ -297,7 +283,7 @@
 </template>
 
 <script setup>
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
@@ -315,6 +301,7 @@ const props = defineProps({
     }
 });
 
+const page = usePage();
 const showUserMenu = ref(false);
 const isMenuOpen = ref(false);
 

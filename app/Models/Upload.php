@@ -18,10 +18,12 @@ class Upload extends Model
         'result_data',
         'error_message',
         'processed_at',
+        'metadata',
     ];
 
     protected $casts = [
         'result_data' => 'array',
+        'metadata' => 'array',
         'processed_at' => 'datetime',
     ];
 

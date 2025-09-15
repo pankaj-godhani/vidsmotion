@@ -502,7 +502,7 @@
                             </Link>
 
                             <Link
-                                :href="route('user.dashboard')"
+                                :href="route('my-files')"
                                 class="bg-gradient-to-r from-green-500/20 to-green-600/20 hover:from-green-500/30 hover:to-green-600/30 border border-green-500/30 hover:border-green-500/50 text-green-400 px-6 py-4 rounded-2xl transition-all duration-300 text-center group"
                             >
                                 <svg class="w-8 h-8 mx-auto mb-2 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

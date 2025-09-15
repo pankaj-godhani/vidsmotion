@@ -1,4 +1,4 @@
-<script setup>
+     <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
 import Footer from '@/Components/Footer.vue';
@@ -50,7 +50,6 @@ const features = ref([
         benefits: [
             "Natural language processing",
             "Context-aware generation",
-            "Multiple video styles",
             "High-quality output"
         ]
     },
@@ -69,15 +68,15 @@ const features = ref([
     },
     {
         id: 3,
-        title: "Multiple Video Styles",
-        description: "Choose from various artistic styles including cinematic, animated, realistic, and abstract to match your vision.",
-        icon: "M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V1a1 1 0 011-1h2a1 1 0 011 1v18a1 1 0 01-1 1H4a1 1 0 01-1-1V1a1 1 0 011-1h2a1 1 0 011 1v3m0 0h8m-8 0v16a1 1 0 001 1h6a1 1 0 001-1V4M7 4h8",
-        gradient: "from-cyan-500 to-teal-500",
+        title: "Advanced Customization",
+        description: "Fine-tune your videos with advanced controls for style, mood, and visual effects to match your exact vision.",
+        icon: "M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4",
+        gradient: "from-orange-500 to-red-500",
         benefits: [
-            "Cinematic quality",
-            "Animated styles",
-            "Realistic rendering",
-            "Abstract art modes"
+            "Style presets",
+            "Mood controls",
+            "Visual effects",
+            "Custom parameters"
         ]
     },
     {
@@ -113,7 +112,6 @@ const features = ref([
         icon: "M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z",
         gradient: "from-emerald-500 to-blue-500",
         benefits: [
-            "4K resolution support",
             "Professional quality",
             "Multiple formats",
             "Platform optimization"
@@ -149,10 +147,10 @@ const useCases = ref([
 ]);
 
 const stats = ref([
-    { number: "10M+", label: "Videos Generated" },
-    { number: "50K+", label: "Happy Users" },
+    { number: "1M+", label: "Videos Generated" },
+    { number: "5K+", label: "Happy Users" },
     { number: "99.9%", label: "Uptime" },
-    { number: "< 30s", label: "Average Generation Time" }
+    { number: "<1 min", label: "Average Generation Time" }
 ]);
 </script>
 

@@ -4,45 +4,190 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Upload;
+use App\Services\PiapiService;
+use App\Services\OnrenderService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class UploadController extends Controller
 {
+    private function getMetadataArray($metadata): array
+    {
+        if (is_array($metadata)) {
+            return $metadata;
+        }
+        if (is_string($metadata)) {
+            return json_decode($metadata, true) ?? [];
+        }
+        return [];
+    }
     public function upload(Request $request): JsonResponse
     {
         $request->validate([
-            'file' => 'required|file|max:102400', // 100MB max
+            'prompt' => 'required|string|max:1000',
+            'image_url' => 'nullable|url', // Image URL from previous upload
+            'duration' => 'nullable|integer|min:1|max:10',
+            'is_recreate' => 'nullable|boolean',
+            'original_video_id' => 'nullable|string',
+            'original_video_title' => 'nullable|string',
         ]);
 
-        $file = $request->file('file');
-        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-        $filePath = $file->storeAs('uploads', $filename, 'public');
+        try {
+            $userId = auth()->id();
+            $prompt = $request->input('prompt');
+            $imageUrl = $request->input('image_url');
+            $duration = $request->input('duration', 6);
+            $isRecreate = $request->input('is_recreate', false);
+            $originalVideoId = $request->input('original_video_id');
+            $originalVideoTitle = $request->input('original_video_title');
 
-        $upload = Upload::create([
-            'user_id' => auth()->id(),
-            'filename' => $filename,
-            'original_filename' => $file->getClientOriginalName(),
-            'file_path' => $filePath,
-            'file_type' => $file->getMimeType(),
-            'file_size' => $file->getSize(),
-            'status' => 'pending',
+            // Create upload record
+            $upload = Upload::create([
+                'user_id' => $userId,
+                'filename' => Str::uuid() . '.mp4',
+                'original_filename' => 'generated_video_' . time() . '.mp4',
+                'file_path' => null, // Will be set when video is ready
+                'file_type' => 'video/mp4',
+                'file_size' => null, // Will be set when video is ready
+                'status' => 'pending',
+                'metadata' => [
+                    'prompt' => $prompt,
+                    'duration' => $duration,
+                    'is_recreate' => $isRecreate,
+                    'original_video_id' => $originalVideoId,
+                    'original_video_title' => $originalVideoTitle,
+                ]
+            ]);
+
+
+            // Generate video using Piapi API
+            $piapiService = new PiapiService();
+            $videoData = [
+                'prompt' => $prompt,
+                'duration' => $duration,
+                'image_url' => 'https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/guitar-man.png',
+            ];
+
+            $result = $piapiService->generateVideo($videoData);
+
+            if ($result['success']) {
+                // Update upload with task ID
+                $currentMetadata = $this->getMetadataArray($upload->metadata);
+                $upload->update([
+                    'status' => 'processing',
+                    'metadata' => array_merge($currentMetadata, [
+                        'piapi_task_id' => $result['task_id'],
+                        'image_url' => $imageUrl,
+                    ])
+                ]);
+
+                Log::info('Video generation started', [
+                    'upload_id' => $upload->id,
+                    'task_id' => $result['task_id'],
+                    'user_id' => $userId
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Video generation started successfully',
+                    'data' => [
+                        'id' => $upload->id,
+                        'task_id' => $result['task_id'],
+                        'status' => $upload->status,
+                        'prompt' => $prompt,
+                        'duration' => $duration,
+                        'created_at' => $upload->created_at,
+                    ]
+                ], 201);
+            } else {
+                // Update upload status to failed
+                $upload->update(['status' => 'failed']);
+
+                Log::error('Video generation failed', [
+                    'upload_id' => $upload->id,
+                    'error' => $result['error'],
+                    'user_id' => $userId
+                ]);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Video generation failed',
+                    'error' => $result['error'],
+                    'data' => [
+                        'id' => $upload->id,
+                        'status' => $upload->status,
+                    ]
+                ], 500);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Upload controller exception', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while processing your request',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Upload reference image only
+     */
+    public function uploadImage(Request $request): JsonResponse
+    {
+        $request->validate([
+            'reference_image' => 'required|file|image|max:10240', // 10MB max for images
         ]);
 
-        // Here you would typically dispatch a job to process the file
-        // ProcessFileJob::dispatch($upload);
+        try {
+            // User is authenticated via Sanctum middleware
+            $user = $request->user();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'File uploaded successfully',
-            'data' => [
-                'id' => $upload->id,
-                'filename' => $upload->original_filename,
-                'status' => $upload->status,
-                'uploaded_at' => $upload->created_at,
-            ]
-        ], 201);
+            $onrenderService = new OnrenderService();
+            $imageResult = $onrenderService->uploadImage($request->file('reference_image'));
+
+            if ($imageResult['success']) {
+                $imageUrl = $imageResult['image_url'];
+                Log::info('Image uploaded successfully', ['image_url' => $imageUrl, 'user_id' => $user->id]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Image uploaded successfully',
+                    'data' => [
+                        'image_url' => $imageUrl,
+                        'uploaded_at' => now()->toISOString()
+                    ]
+                ], 201);
+            } else {
+                Log::error('Image upload failed', ['error' => $imageResult['error'], 'user_id' => $user->id]);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Image upload failed',
+                    'error' => $imageResult['error']
+                ], 500);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Image upload exception', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => $request->user()?->id
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while uploading the image',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

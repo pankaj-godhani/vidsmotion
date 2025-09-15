@@ -260,7 +260,7 @@ onUnmounted(() => {
                                                 Video Generator
                                             </Link>
                                             <Link
-                                                :href="route('user.dashboard')"
+                                                :href="route('my-files')"
                                                 class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
                                                 @click="showUserMenu = false"
                                             >

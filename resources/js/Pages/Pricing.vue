@@ -188,7 +188,7 @@
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="text-gray-300">Up to 06 seconds per video</span>
+                                        <span class="text-gray-300">Up to 6 seconds per video</span>
                                     </li>
                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -288,7 +288,7 @@
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="text-gray-300">Up to 06 seconds per video</span>
+                                        <span class="text-gray-300">Up to 6 seconds per video</span>
                                     </li>
                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -308,14 +308,7 @@
                                         </svg>
                                         <span class="text-gray-300">Instant processing</span>
                                     </li>
-                                    <li class="flex items-center">
-                                        <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        <span class="text-gray-300">24/7 priority support</span>
-                                    </li>
-
-                                    <li class="flex items-center">
+                                     <li class="flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
@@ -386,12 +379,12 @@
 
                         <div class="bg-gray-800 rounded-lg p-6">
                             <h3 class="text-xl font-semibold text-white mb-3">Do you offer refunds?</h3>
-                            <p class="text-gray-300">We offer a 30-day money-back guarantee for all paid plans. Contact our support team if you're not satisfied.</p>
+                            <p class="text-gray-300">No, In our plan no refund is available.</p>
                         </div>
 
                         <div class="bg-gray-800 rounded-lg p-6">
                             <h3 class="text-xl font-semibold text-white mb-3">Is there a free trial for paid plans?</h3>
-                            <p class="text-gray-300">Yes, we offer a 7-day free trial for our Pro plan. No credit card required to start.</p>
+                            <p class="text-gray-300">No, we offer a 7-day trial for our Pro plan.</p>
                         </div>
                     </div>
                 </div>

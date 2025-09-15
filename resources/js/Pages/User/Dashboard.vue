@@ -28,17 +28,6 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <!-- Filter Dropdown -->
-                        <select
-                            v-model="statusFilter"
-                            class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500"
-                        >
-                            <option value="">All Status</option>
-                            <option value="pending">Pending</option>
-                            <option value="processing">Processing</option>
-                            <option value="completed">Completed</option>
-                            <option value="failed">Failed</option>
-                        </select>
                     </div>
                 </div>
             </div>
@@ -112,39 +101,6 @@
                         </div>
                     </div>
 
-                    <!-- Upload Section -->
-                    <div class="mb-8">
-                        <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8">
-                            <div class="text-center">
-                                <div class="w-20 h-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                    </svg>
-                                </div>
-                                <h3 class="text-xl font-semibold text-white mb-2">Upload New File</h3>
-                                <p class="text-gray-400 mb-6">Drag and drop your file here or click to browse</p>
-
-                                <div class="relative">
-                                    <input
-                                        type="file"
-                                        @change="handleFileUpload"
-                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                        accept="*/*"
-                                        ref="fileInput"
-                                    />
-                                    <div class="border-2 border-dashed border-gray-600 rounded-xl p-8 hover:border-purple-500 transition-colors duration-300 cursor-pointer">
-                                        <div class="flex flex-col items-center">
-                                            <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                            </svg>
-                                            <p class="text-gray-300 font-medium">Choose file or drag it here</p>
-                                            <p class="text-sm text-gray-500 mt-2">Maximum file size: 100MB</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Files List -->
                     <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden">
@@ -261,8 +217,6 @@ const stats = ref({
 
 const recentUploads = ref([])
 const searchQuery = ref('')
-const statusFilter = ref('')
-const fileInput = ref(null)
 
 const filteredUploads = computed(() => {
     let filtered = recentUploads.value
@@ -273,40 +227,9 @@ const filteredUploads = computed(() => {
         )
     }
 
-    if (statusFilter.value) {
-        filtered = filtered.filter(upload => upload.status === statusFilter.value)
-    }
-
     return filtered
 })
 
-const handleFileUpload = async (event) => {
-    const file = event.target.files[0]
-    if (!file) return
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-        const response = await axios.post('/api/upload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        })
-
-        if (response.data.success) {
-            // Refresh the uploads list
-            loadRecentUploads()
-            loadStats()
-            // Reset file input
-            if (fileInput.value) {
-                fileInput.value.value = ''
-            }
-        }
-    } catch (error) {
-        console.error('Upload failed:', error)
-    }
-}
 
 const loadStats = async () => {
     try {

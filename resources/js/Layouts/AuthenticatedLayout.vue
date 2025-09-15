@@ -46,8 +46,8 @@ const showingNavigationDropdown = ref(false);
                                     Video Generator
                                 </NavLink>
                                 <NavLink
-                                    :href="route('user.dashboard')"
-                                    :active="route().current('user.*')"
+                                    :href="route('my-files')"
+                                    :active="route().current('my-files')"
                                 >
                                     My Files
                                 </NavLink>

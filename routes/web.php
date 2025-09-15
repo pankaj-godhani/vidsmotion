@@ -185,10 +185,10 @@ Route::get('/video-generator', function (Request $request) {
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // User Dashboard Routes
-Route::middleware(['auth', 'verified'])->prefix('user')->name('user.')->group(function () {
-    Route::get('/dashboard', function () {
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/my-files', function () {
         return Inertia::render('User/Dashboard');
-    })->name('dashboard');
+    })->name('my-files');
 
     Route::get('/uploads/{id}', function ($id) {
         return Inertia::render('User/UploadDetails', ['uploadId' => $id]);
@@ -232,6 +232,26 @@ Route::post('/razorpay/webhook', [App\Http\Controllers\RazorpayWebhookController
     // User payment routes
     Route::get('/api/user/payments', [App\Http\Controllers\PaymentController::class, 'getUserPayments'])->name('payment.user-payments');
     Route::get('/api/user/active-subscription', [App\Http\Controllers\PaymentController::class, 'getActiveSubscription'])->name('payment.active-subscription');
+
+    // User dashboard API routes
+    Route::get('/api/user/stats', [App\Http\Controllers\Api\UserController::class, 'stats'])->name('api.user.stats');
+    Route::get('/api/user/uploads', [App\Http\Controllers\Api\UserController::class, 'uploads'])->name('api.user.uploads');
+
+    // Video generation API routes
+    Route::post('/api/upload', [App\Http\Controllers\Api\UploadController::class, 'upload'])->name('api.upload');
+    Route::get('/api/status/{task_id}', [App\Http\Controllers\Api\StatusController::class, 'status'])->name('api.status');
+    Route::get('/api/result/{id}', [App\Http\Controllers\Api\ResultController::class, 'result'])->name('api.result');
+    Route::get('/api/video-proxy', [App\Http\Controllers\Api\VideoProxyController::class, 'proxy'])->name('api.video-proxy');
+
+    // Test endpoint to verify authentication
+    Route::get('/api/test-auth', function() {
+        return response()->json([
+            'success' => true,
+            'user_id' => auth()->id(),
+            'user_name' => auth()->user()->name ?? 'Unknown',
+            'authenticated' => auth()->check()
+        ]);
+    })->name('api.test-auth');
 });
 
 require __DIR__.'/auth.php';

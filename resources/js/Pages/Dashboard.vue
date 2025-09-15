@@ -17,12 +17,12 @@ import HeaderMenu from '@/Components/HeaderMenu.vue';
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div class="text-center mb-12">
                     <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">
-                        Welcome to Kling
+                        Welcome to VidsMotion
                     </h1>
                     <p class="text-xl text-gray-300 mb-12">Choose your dashboard to get started</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     <a
                         href="/video-generator"
                         class="block p-8 bg-gray-900 border border-gray-800 rounded-2xl hover:border-gray-700 transition-all transform hover:-translate-y-1"
@@ -39,7 +39,7 @@ import HeaderMenu from '@/Components/HeaderMenu.vue';
                     </a>
 
                     <a
-                        href="/user/dashboard"
+                        href="/my-files"
                         class="block p-8 bg-gray-900 border border-gray-800 rounded-2xl hover:border-gray-700 transition-all"
                     >
                         <div class="text-center">
@@ -53,20 +53,6 @@ import HeaderMenu from '@/Components/HeaderMenu.vue';
                         </div>
                     </a>
 
-                    <a
-                        href="/admin/dashboard"
-                        class="block p-8 bg-gray-900 border border-gray-800 rounded-2xl hover:border-gray-700 transition-all"
-                    >
-                        <div class="text-center">
-                            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6">
-                                <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="text-xl font-semibold text-white mb-3">Admin Dashboard</h4>
-                            <p class="text-gray-300">Manage users, monitor system activity, and oversee all uploads</p>
-                        </div>
-                    </a>
                 </div>
             </div>
         </div>
