@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'onrender' => [
+        'key' => env('ONRENDER_API_KEY', ''),
+        'base_url' => env('ONRENDER_BASE_URL', 'https://it2v-api.onrender.com/api/v1'),
+        'header' => env('ONRENDER_HEADER', 'X-API-Key'), // or Authorization
+        'auth_scheme' => env('ONRENDER_AUTH_SCHEME', null), // e.g. Bearer
+        'file_field' => env('ONRENDER_FILE_FIELD', 'file'),
+        'method' => env('ONRENDER_METHOD', 'POST'),
+    ],
+
 ];

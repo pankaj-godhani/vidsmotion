@@ -101,7 +101,7 @@
                                         ref="fileInput"
                                         type="file"
                                         accept="image/*"
-
+                                        @change="handleFileSelect"
                                         class="hidden"
                                         :disabled="isGenerating"
                                     />
@@ -146,7 +146,7 @@
                                 <!-- Upload Progress -->
                                 <div v-if="isUploading" class="mt-3">
                                     <div class="flex justify-between text-sm text-gray-300 mb-2">
-                                        <span>Uploading...</span>
+                                        <span>Uploading image to server...</span>
                                         <span>{{ uploadProgress }}%</span>
                                     </div>
                                     <div class="w-full bg-gray-700 rounded-full h-2">
@@ -161,10 +161,10 @@
                             <!-- Generate Button -->
                             <button
                                 @click="generateVideo"
-                                :disabled="!prompt.trim() || isGenerating || isUploading"
+                                :disabled="!prompt.trim() || isGenerating || isUploading || (uploadedImage && !uploadedImageUrl)"
                                 :class="[
                                     'w-full py-5 rounded-2xl font-bold text-lg transition-all duration-300 relative overflow-hidden group',
-                                    (isGenerating || isUploading)
+                                    (isGenerating || isUploading || (uploadedImage && !uploadedImageUrl))
                                         ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed'
                                         : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.02]'
                                 ]"
@@ -442,7 +442,11 @@ const logout = () => {
 // Image upload methods
 const triggerFileInput = () => {
     if (!isGenerating.value) {
-        fileInput.value?.click()
+        if (fileInput.value) {
+            // Reset value so selecting the same file triggers change
+            fileInput.value.value = ''
+            fileInput.value.click()
+        }
     }
 }
 
@@ -506,6 +510,8 @@ const processFile = async (file) => {
 const uploadImageToAPI = async (file) => {
     isUploading.value = true
     uploadProgress.value = 0
+    uploadedImageUrl.value = ''
+    isImageUploaded.value = false
 
     try {
         const formData = new FormData()
@@ -516,11 +522,13 @@ const uploadImageToAPI = async (file) => {
                 'Content-Type': 'multipart/form-data',
             },
             onUploadProgress: (progressEvent) => {
-                uploadProgress.value = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                if (progressEvent.total) {
+                    uploadProgress.value = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                }
             }
         })
 
-        if (response.data.success) {
+        if (response.data?.success && response.data?.data?.image_url) {
             uploadedImageUrl.value = response.data.data.image_url
             isImageUploaded.value = true
 
@@ -528,12 +536,12 @@ const uploadImageToAPI = async (file) => {
                 window.$notify({
                     type: 'success',
                     title: 'Image Uploaded!',
-                    message: 'Your reference image has been uploaded successfully. You can now generate a video.',
-                    duration: 3000
+                    message: 'Image uploaded. You can now generate the video.',
+                    duration: 2500
                 })
             }
         } else {
-            throw new Error(response.data.message || 'Upload failed')
+            throw new Error(response.data?.message || 'Upload failed')
         }
     } catch (error) {
         console.error('Image upload failed:', error)
@@ -551,7 +559,6 @@ const uploadImageToAPI = async (file) => {
         removeImage()
     } finally {
         isUploading.value = false
-        uploadProgress.value = 0
     }
 }
 

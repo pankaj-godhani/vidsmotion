@@ -10,11 +10,20 @@ class OnrenderService
 {
     private $apiKey;
     private $baseUrl;
+    private $headerName;
+    private $authScheme;
+    private $fileField;
+    private $method;
 
     public function __construct()
     {
-        $this->apiKey = 'GsMf1Iqk3R18SHJCT1xYFIcY1';
-        $this->baseUrl = 'https://it2v-api.onrender.com/api/v1';
+        // Prefer environment variables; fall back to sane defaults
+        $this->apiKey = config('services.onrender.key', env('ONRENDER_API_KEY', ''));
+        $this->baseUrl = rtrim(config('services.onrender.base_url', env('ONRENDER_BASE_URL', 'https://it2v-api.onrender.com/api/v1')), '/');
+        $this->headerName = config('services.onrender.header', env('ONRENDER_HEADER', 'X-API-Key'));
+        $this->authScheme = config('services.onrender.auth_scheme', env('ONRENDER_AUTH_SCHEME'));
+        $this->fileField = config('services.onrender.file_field', env('ONRENDER_FILE_FIELD', 'file'));
+        $this->method = strtoupper(config('services.onrender.method', env('ONRENDER_METHOD', 'POST')));
     }
 
     /**
@@ -23,20 +32,32 @@ class OnrenderService
     public function uploadImage(UploadedFile $file): array
     {
         try {
+            if (empty($this->baseUrl) || empty($this->apiKey)) {
+                return [
+                    'success' => false,
+                    'error' => 'Onrender base URL or API key is not configured',
+                ];
+            }
+
             Log::info('Onrender API Upload Request', [
                 'filename' => $file->getClientOriginalName(),
                 'size' => $file->getSize(),
-                'mime' => $file->getMimeType()
+                'mime' => $file->getMimeType(),
+                'base_url' => $this->baseUrl,
             ]);
 
-            // Try with API key as query parameter
+
+
             $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'X-API-key' => $this->apiKey
-            ])->timeout(60) // Increase timeout to 60 seconds
-            ->attach(
-                'file', $file->getContent(), $file->getClientOriginalName()
-            )->post($this->baseUrl . '/images/upload_image');
+                'x-api-key' => $this->apiKey,
+                'Accept' => 'application/json'
+                //'Authorization' => 'Bearer ' . env('IT2V_API_KEY'),  // if bearer needed
+            ])->attach(
+                'file',  // key name expected by API
+                file_get_contents($file->getRealPath()),
+                $file->getClientOriginalName()
+            )
+            ->post($this->baseUrl);
 
             if ($response->successful()) {
                 $responseData = $response->json();
@@ -45,23 +66,22 @@ class OnrenderService
                 return [
                     'success' => true,
                     'image_url' => $responseData['image_url'] ?? $responseData['url'] ?? null,
-                    'data' => $responseData
-                ];
-            } else {
-                Log::error('Onrender API Upload Error', [
-                    'status' => $response->status(),
-                    'response' => $response->body(),
-                    'headers' => $response->headers(),
-                    'url' => $this->baseUrl . '/api/v1/images/upload_image'
-                ]);
-
-                return [
-                    'success' => false,
-                    'error' => 'Upload failed: ' . $response->status(),
-                    'details' => $response->body(),
-                    'url' => $this->baseUrl . '/images/upload_image'
+                    'data' => $responseData,
                 ];
             }
+
+            Log::error('Onrender API Upload Error', [
+                'status' => $response->status(),
+                'response' => $response->body(),
+                'headers' => $response->headers(),
+                'url' => $this->baseUrl,
+            ]);
+
+            return [
+                'success' => false,
+                'error' => 'Upload failed: ' . $response->status(),
+                'details' => $response->body(),
+            ];
         } catch (\Exception $e) {
             Log::error('Onrender Service Exception', [
                 'message' => $e->getMessage(),

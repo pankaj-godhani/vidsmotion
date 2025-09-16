@@ -193,6 +193,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/uploads/{id}', function ($id) {
         return Inertia::render('User/UploadDetails', ['uploadId' => $id]);
     })->name('uploads.show');
+
+    // Secure download route
+    Route::get('/api/download/{id}', [App\Http\Controllers\Api\ResultController::class, 'download'])
+        ->name('api.download');
 });
 
 // Admin Dashboard Routes
@@ -238,6 +242,7 @@ Route::post('/razorpay/webhook', [App\Http\Controllers\RazorpayWebhookController
     Route::get('/api/user/uploads', [App\Http\Controllers\Api\UserController::class, 'uploads'])->name('api.user.uploads');
 
     // Video generation API routes
+    Route::post('/api/upload-image', [App\Http\Controllers\Api\UploadController::class, 'uploadImage'])->name('api.upload-image');
     Route::post('/api/upload', [App\Http\Controllers\Api\UploadController::class, 'upload'])->name('api.upload');
     Route::get('/api/status/{task_id}', [App\Http\Controllers\Api\StatusController::class, 'status'])->name('api.status');
     Route::get('/api/result/{id}', [App\Http\Controllers\Api\ResultController::class, 'result'])->name('api.result');

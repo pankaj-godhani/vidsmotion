@@ -68,8 +68,10 @@ class UploadController extends Controller
             $videoData = [
                 'prompt' => $prompt,
                 'duration' => $duration,
-                'image_url' => 'https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/guitar-man.png',
             ];
+            if (!empty($imageUrl)) {
+                $videoData['image_url'] = $imageUrl;
+            }
 
             $result = $piapiService->generateVideo($videoData);
 
@@ -143,6 +145,9 @@ class UploadController extends Controller
      */
     public function uploadImage(Request $request): JsonResponse
     {
+        // Allow longer processing for external API uploads
+        try { @set_time_limit(180); } catch (\Throwable $e) { /* ignore on restricted environments */ }
+
         $request->validate([
             'reference_image' => 'required|file|image|max:10240', // 10MB max for images
         ]);
@@ -167,13 +172,20 @@ class UploadController extends Controller
                     ]
                 ], 201);
             } else {
-                Log::error('Image upload failed', ['error' => $imageResult['error'], 'user_id' => $user->id]);
+                Log::error('Image upload failed', [
+                    'error' => $imageResult['error'] ?? null,
+                    'details' => $imageResult['details'] ?? null,
+                    'user_id' => $user->id
+                ]);
+
+                $status = str_contains((string)($imageResult['error'] ?? ''), '422') ? 422 : 500;
 
                 return response()->json([
                     'success' => false,
                     'message' => 'Image upload failed',
-                    'error' => $imageResult['error']
-                ], 500);
+                    'error' => $imageResult['error'] ?? 'Unknown error',
+                    'details' => $imageResult['details'] ?? null,
+                ], $status);
             }
 
         } catch (\Exception $e) {

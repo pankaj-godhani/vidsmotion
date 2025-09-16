@@ -160,12 +160,6 @@
                                         <!-- Action Buttons -->
                                         <div class="flex items-center space-x-2">
                                             <button
-                                                @click="viewDetails(upload.id)"
-                                                class="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors duration-200"
-                                            >
-                                                View
-                                            </button>
-                                            <button
                                                 v-if="upload.status === 'completed'"
                                                 @click="downloadResult(upload.id)"
                                                 class="px-3 py-1.5 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-sm rounded-lg transition-all duration-200"
@@ -193,7 +187,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { Head, Link, router } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import axios from 'axios'
 import HeaderMenu from '@/Components/HeaderMenu.vue'
 
@@ -277,20 +271,9 @@ const formatFileSize = (bytes) => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
-const viewDetails = (id) => {
-    router.visit(`/user/uploads/${id}`)
-}
-
-const downloadResult = async (id) => {
-    try {
-        const response = await axios.get(`/api/result/${id}`)
-        if (response.data.success) {
-            // Handle result download
-            console.log('Result:', response.data.data)
-        }
-    } catch (error) {
-        console.error('Failed to download result:', error)
-    }
+const downloadResult = (id) => {
+    // Trigger secure download from backend
+    window.location.href = `/api/download/${id}`
 }
 
 const retryUpload = async (id) => {
