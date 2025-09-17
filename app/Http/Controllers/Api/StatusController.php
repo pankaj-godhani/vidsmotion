@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Upload;
 use App\Services\PiapiService;
+use App\Services\CreditService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -58,6 +59,22 @@ class StatusController extends Controller
                 ]);
 
                 $latestMetadata = $updatedMetadata;
+
+                // Deduct credits once per completed upload
+                try {
+                    $user = $request->user();
+                    if ($user) {
+                        $creditService = new CreditService();
+                        $required = (int)($latestMetadata['required_credits'] ?? 80);
+                        if ($required < 50) { $required = 50; }
+                        $creditService->deductCredits($user, $required, 'Video generation completed');
+                    }
+                } catch (\Throwable $e) {
+                    Log::error('Credit deduction failed after completion', [
+                        'upload_id' => $upload->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
 
                 Log::info('Video completed via status check', [
                     'upload_id' => $upload->id,

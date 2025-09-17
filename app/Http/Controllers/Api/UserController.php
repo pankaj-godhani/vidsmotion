@@ -40,4 +40,14 @@ class UserController extends Controller
             'data' => $uploads
         ]);
     }
+
+    public function credits(Request $request): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'credits' => $request->user()->credits,
+            ]
+        ]);
+    }
 }

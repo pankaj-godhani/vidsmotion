@@ -345,19 +345,19 @@ class PaymentController extends Controller
         return match ($planName) {
             'Standard' => [
                 'type' => 'Standard',
-                'amount' => 50.00,
+                'amount' => 99.00,
                 'duration_days' => 7,
                 'subscription_id' => 'sub_RGmRftCSxQxz1X'
             ],
             'Pro Monthly' => [
                 'type' => 'Pro Monthly',
-                'amount' => 100.00,
+                'amount' => 299.00,
                 'duration_days' => 30,
                 'subscription_id' => 'sub_RGmS1mvLpdkjej'
             ],
             'Premier Yearly' => [
                 'type' => 'Premier Yearly',
-                'amount' => 1100.00,
+                'amount' => 3999.00,
                 'duration_days' => 365,
                 'subscription_id' => 'sub_RGmSOxU11fg088'
             ],

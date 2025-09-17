@@ -73,7 +73,7 @@
                                 <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors duration-300">7 days</h3>
                                 <p class="text-gray-400 mb-6">7 days trial</p>
                                 <div class="mb-8 group-hover:scale-110 transition-transform duration-300">
-                                    <span class="text-4xl font-bold text-white group-hover:text-purple-400 transition-colors duration-300">₹50</span>
+                                    <span class="text-4xl font-bold text-white group-hover:text-purple-400 transition-colors duration-300">₹99</span>
                                 </div>
 
                                 <ul class="space-y-4 mb-8 text-left">
@@ -112,7 +112,7 @@
 
                                 <button
                                     v-if="!$page.props.auth.user"
-                                    @click="redirectToLoginWithIntent('Standard', 50)"
+                                    @click="redirectToLoginWithIntent('Standard', 99)"
                                     class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium"
                                 >
                                     Subscribe Standard
@@ -174,7 +174,7 @@
                                 <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300">Monthly</h3>
                                 <p class="text-gray-400 mb-6">Monthly billing</p>
                                 <div class="mb-8 group-hover:scale-110 transition-transform duration-300">
-                                    <span class="text-4xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300">₹100</span>
+                                    <span class="text-4xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300">₹299</span>
                                 </div>
 
                                 <ul class="space-y-4 mb-8 text-left">
@@ -219,7 +219,7 @@
 
                                 <button
                                     v-if="!$page.props.auth.user"
-                                    @click="redirectToLoginWithIntent('Pro Monthly', 100)"
+                                    @click="redirectToLoginWithIntent('Pro Monthly', 299)"
                                     class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium"
                                 >
                                     Subscribe Pro Monthly
@@ -274,7 +274,7 @@
                                 <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors duration-300">Yearly</h3>
                                 <p class="text-gray-400 mb-6">Yearly billing</p>
                                 <div class="mb-8 group-hover:scale-110 transition-transform duration-300">
-                                    <span class="text-4xl font-bold text-white group-hover:text-cyan-400 transition-colors duration-300">₹1100</span>
+                                    <span class="text-4xl font-bold text-white group-hover:text-cyan-400 transition-colors duration-300">₹3999</span>
                                 </div>
 
                                 <ul class="space-y-4 mb-8 text-left">
@@ -318,7 +318,7 @@
 
                                 <button
                                     v-if="!$page.props.auth.user"
-                                    @click="redirectToLoginWithIntent('Premier Yearly', 1100)"
+                                    @click="redirectToLoginWithIntent('Premier Yearly', 3999)"
                                     class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium"
                                 >
                                     Subscribe Premier Yearly

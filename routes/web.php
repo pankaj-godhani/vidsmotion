@@ -177,7 +177,8 @@ Route::get('/video-generator', function (Request $request) {
 
     return Inertia::render('VideoGenerator', [
         'recreateData' => $recreateData,
-        'isRecreateMode' => $request->has('recreate') && $request->get('recreate') === 'true'
+        'isRecreateMode' => $request->has('recreate') && $request->get('recreate') === 'true',
+        'userCredits' => auth()->user()->credits ?? 0,
     ]);
 })->middleware(['auth', 'verified', 'active.subscription'])->name('video-generator');
 
@@ -240,6 +241,7 @@ Route::post('/razorpay/webhook', [App\Http\Controllers\RazorpayWebhookController
     // User dashboard API routes
     Route::get('/api/user/stats', [App\Http\Controllers\Api\UserController::class, 'stats'])->name('api.user.stats');
     Route::get('/api/user/uploads', [App\Http\Controllers\Api\UserController::class, 'uploads'])->name('api.user.uploads');
+    Route::get('/api/user/credits', [App\Http\Controllers\Api\UserController::class, 'credits'])->name('api.user.credits');
 
     // Video generation API routes
     Route::post('/api/upload-image', [App\Http\Controllers\Api\UploadController::class, 'uploadImage'])->name('api.upload-image');

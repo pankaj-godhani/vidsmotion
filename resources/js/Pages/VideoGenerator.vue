@@ -77,12 +77,15 @@
                                         </button>
                                     </div>
                                 </div>
+                                <div v-if="promptErrorMessage" class="mt-2 text-sm text-red-400">
+                                    {{ promptErrorMessage }}
+                                </div>
                             </div>
 
                             <!-- Image Upload Section -->
                             <div class="mb-8">
                                 <label class="block text-sm font-semibold text-gray-200 mb-3">
-                                    Reference Image (Optional)
+                                    Reference Image
                                 </label>
 
                                 <!-- Upload Area -->
@@ -156,15 +159,38 @@
                                         ></div>
                                     </div>
                                 </div>
+
+                                <!-- Upload Errors Inline -->
+                                <div v-if="imageErrorMessage" class="mt-3 text-sm text-red-400">
+                                    {{ imageErrorMessage }}
+                                </div>
+                                <div v-else-if="uploadErrorMessage" class="mt-3 text-sm text-red-400">
+                                    {{ uploadErrorMessage }}
+                                </div>
                             </div>
 
-                            <!-- Generate Button -->
+                            <!-- Credit Activity + Generate Button + Tooltip -->
+                            <div class="relative inline-block w-full">
+                            <!-- Credit activity row -->
+                            <div class="mb-3 flex items-center justify-between text-sm">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-gray-300">Available credits</span>
+                                    <span class="px-2 py-0.5 rounded-full text-xs"
+                                          :class="(availableCredits) >= currentCostPerGenerate ? 'bg-green-600/20 text-green-300 border border-green-500/30' : 'bg-red-600/20 text-red-300 border border-red-500/30'">
+                                        {{ availableCredits }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center space-x-2 text-gray-300">
+                                    <span class="text-xs">Cost per generate:</span>
+                                    <span class="px-2 py-0.5 rounded-full text-xs bg-purple-600/20 text-purple-300 border border-purple-500/30">{{ currentCostPerGenerate }}</span>
+                                </div>
+                            </div>
                             <button
                                 @click="generateVideo"
-                                :disabled="!prompt.trim() || isGenerating || isUploading || (uploadedImage && !uploadedImageUrl)"
+                                :disabled="!prompt.trim() || isGenerating || isUploading || !uploadedImageUrl"
                                 :class="[
                                     'w-full py-5 rounded-2xl font-bold text-lg transition-all duration-300 relative overflow-hidden group',
-                                    (isGenerating || isUploading || (uploadedImage && !uploadedImageUrl))
+                                    (isGenerating || isUploading || !uploadedImageUrl)
                                         ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed'
                                         : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.02]'
                                 ]"
@@ -190,6 +216,12 @@
                                     Generate Video
                                 </div>
                             </button>
+                            <!-- Credits Tooltip -->
+                            <div v-if="showCreditsTooltip" class="absolute -top-12 left-1/2 -translate-x-1/2 bg-red-600/95 text-white text-xs px-3 py-2 rounded shadow-lg z-20 whitespace-nowrap">
+                                {{ creditsTooltipMessage }}
+                                <div class="absolute left-1/2 -bottom-2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-red-600/95"></div>
+                            </div>
+                            </div>
 
                             <!-- Generation Progress -->
                             <div v-if="isGenerating" class="mt-6">
@@ -238,6 +270,16 @@
                             </div>
 
                             <div class="aspect-video bg-gray-800 rounded-xl overflow-hidden relative">
+                                <!-- Immediate round spinner in preview while waiting for first progress -->
+                                <div
+                                    v-if="isGenerating && videoProgress === 0"
+                                    class="absolute inset-0 flex items-center justify-center bg-black/50 z-10"
+                                >
+                                    <div class="flex flex-col items-center">
+                                        <div class="h-10 w-10 rounded-full border-4 border-purple-500/30 border-t-purple-400 animate-spin"></div>
+                                        <div class="mt-3 text-sm text-gray-200">Preparing...</div>
+                                    </div>
+                                </div>
                                 <!-- Show original video in recreate mode -->
                                 <div v-if="isRecreateMode && recreateData" class="w-full h-full">
                                     <video
@@ -276,9 +318,6 @@
                                         <div>Proxy URL: {{ currentVideo.url }}</div>
                                         <div v-if="currentVideo.originalUrl">Original URL: {{ currentVideo.originalUrl }}</div>
                                         <div>Type: {{ currentVideo.type }}</div>
-                                        <a :href="currentVideo.url" target="_blank" class="text-blue-400 hover:text-blue-300 underline">
-                                            Open video in new tab
-                                        </a>
                                     </div>
                                     <!-- Loading overlay -->
                                     <div v-if="isVideoLoading" class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -360,7 +399,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { router, Link, usePage } from '@inertiajs/vue3'
 import axios from 'axios'
 import Footer from '@/Components/Footer.vue'
@@ -378,6 +417,24 @@ const isRecreateMode = ref(false)
 const recreateData = ref(null)
 const isVideoLoading = ref(false)
 const videoProgress = ref(0)
+const baseCostPerGenerate = 50
+const extraCostLongPrompt = 10
+const currentCostPerGenerate = computed(() => {
+    return (prompt.value && prompt.value.trim().length > 80)
+        ? baseCostPerGenerate + extraCostLongPrompt
+        : baseCostPerGenerate
+})
+const availableCredits = ref(page.props.userCredits ?? 0)
+const refreshCredits = async () => {
+    try {
+        const res = await axios.get('/api/user/credits')
+        if (res.data?.success) {
+            availableCredits.value = res.data.data.credits
+        }
+    } catch (e) {
+        // ignore
+    }
+}
 
 // Image upload data
 const uploadedImage = ref(null)
@@ -390,6 +447,11 @@ const isDragOver = ref(false)
 const fileInput = ref(null)
 const uploadedImageUrl = ref('')
 const isImageUploaded = ref(false)
+const uploadErrorMessage = ref('')
+const imageErrorMessage = ref('')
+const promptErrorMessage = ref('')
+const showCreditsTooltip = ref(false)
+const creditsTooltipMessage = ref('')
 
 
 
@@ -397,6 +459,7 @@ const isImageUploaded = ref(false)
 // Methods
 const clearPrompt = () => {
     prompt.value = ''
+    promptErrorMessage.value = ''
 }
 
 const exitRecreateMode = () => {
@@ -468,6 +531,8 @@ const handleFileDrop = (event) => {
 const processFile = async (file) => {
     // Validate file type
     if (!file.type.startsWith('image/')) {
+        imageErrorMessage.value = 'Reference image is required and must be PNG/JPG/GIF'
+        uploadErrorMessage.value = 'Please select an image file (PNG, JPG, GIF)'
         if (window.$notify) {
             window.$notify({
                 type: 'error',
@@ -482,6 +547,8 @@ const processFile = async (file) => {
     // Validate file size (10MB limit)
     const maxSize = 10 * 1024 * 1024 // 10MB
     if (file.size > maxSize) {
+        imageErrorMessage.value = 'Reference image must be smaller than 10MB'
+        uploadErrorMessage.value = 'Please select an image smaller than 10MB'
         if (window.$notify) {
             window.$notify({
                 type: 'error',
@@ -500,6 +567,7 @@ const processFile = async (file) => {
         uploadedImagePreview.value = e.target.result
         uploadedImageName.value = file.name
         uploadedImageSize.value = file.size
+        imageErrorMessage.value = ''
     }
     reader.readAsDataURL(file)
 
@@ -512,6 +580,8 @@ const uploadImageToAPI = async (file) => {
     uploadProgress.value = 0
     uploadedImageUrl.value = ''
     isImageUploaded.value = false
+    uploadErrorMessage.value = ''
+    imageErrorMessage.value = ''
 
     try {
         const formData = new FormData()
@@ -531,6 +601,8 @@ const uploadImageToAPI = async (file) => {
         if (response.data?.success && response.data?.data?.image_url) {
             uploadedImageUrl.value = response.data.data.image_url
             isImageUploaded.value = true
+            uploadErrorMessage.value = ''
+            imageErrorMessage.value = ''
 
             if (window.$notify) {
                 window.$notify({
@@ -546,17 +618,45 @@ const uploadImageToAPI = async (file) => {
     } catch (error) {
         console.error('Image upload failed:', error)
 
+        // Prefer upstream details payload (may be a JSON string or object)
+        let msg = ''
+        const data = error?.response?.data
+        if (data?.details) {
+            try {
+                if (typeof data.details === 'string') {
+                    const parsed = JSON.parse(data.details)
+                    msg = parsed?.detail || parsed?.message || data.details
+                } else if (typeof data.details === 'object') {
+                    msg = data.details.detail || data.details.message || JSON.stringify(data.details)
+                }
+            } catch (_) {
+                msg = data.details
+            }
+        }
+        if (!msg) {
+            msg = data?.detail || data?.message
+        }
+        if (!msg && typeof data === 'string') {
+            try {
+                const parsed = JSON.parse(data)
+                msg = parsed.detail || parsed.message
+            } catch (_) {}
+        }
+        if (!msg) msg = 'Failed to upload image. Please try again.'
+        uploadErrorMessage.value = msg
+        imageErrorMessage.value = 'Reference image is required'
+
         if (window.$notify) {
             window.$notify({
                 type: 'error',
                 title: 'Upload Failed',
-                message: error.response?.data?.message || 'Failed to upload image. Please try again.',
+                message: msg,
                 duration: 5000
             })
         }
 
-        // Reset image state on failure
-        removeImage()
+        // Keep preview info but clear uploadedImageUrl flag so Generate stays disabled
+        isImageUploaded.value = false
     } finally {
         isUploading.value = false
     }
@@ -569,6 +669,8 @@ const removeImage = () => {
     uploadedImageSize.value = 0
     uploadedImageUrl.value = ''
     isImageUploaded.value = false
+    uploadErrorMessage.value = ''
+    imageErrorMessage.value = ''
     if (fileInput.value) {
         fileInput.value.value = ''
     }
@@ -583,7 +685,15 @@ const formatFileSize = (bytes) => {
 }
 
 const generateVideo = async () => {
-    if (!prompt.value.trim()) return
+    promptErrorMessage.value = ''
+    if (!prompt.value.trim()) {
+        promptErrorMessage.value = 'Prompt is required'
+        return
+    }
+    if (!uploadedImageUrl.value) {
+        imageErrorMessage.value = 'Reference image is required'
+        return
+    }
 
     isGenerating.value = true
     generationProgress.value = 0
@@ -635,11 +745,18 @@ const generateVideo = async () => {
         videoProgress.value = 0
 
         // Show error notification
-        if (window.$notify) {
+        const msg = error.response?.data?.message || 'Failed to generate video. Please try again.'
+        if (error.response?.status === 402 && error.response?.data?.data) {
+            const req = error.response.data.data.required
+            const cur = error.response.data.data.current
+            creditsTooltipMessage.value = `${msg} (Required: ${req}, Current: ${cur})`
+            showCreditsTooltip.value = true
+            setTimeout(() => { showCreditsTooltip.value = false }, 4000)
+        } else if (window.$notify) {
             window.$notify({
                 type: 'error',
                 title: 'Generation Failed',
-                message: error.response?.data?.message || 'Failed to generate video. Please try again.',
+                message: msg,
                 duration: 5000
             })
         }
@@ -770,25 +887,9 @@ const pollVideoStatus = async (taskId) => {
 
 const downloadVideo = (video = null) => {
     const targetVideo = video || currentVideo.value
-    if (targetVideo) {
-        // Use original URL for download to get the actual video file
-        const downloadUrl = targetVideo.originalUrl || targetVideo.url
-
-        if (downloadUrl && downloadUrl.startsWith('http')) {
-            // Create a temporary link to download the video
-            const link = document.createElement('a')
-            link.href = downloadUrl
-            link.download = `video-${targetVideo.id}.mp4`
-            link.target = '_blank'
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
-
-            console.log('Downloading video:', targetVideo.id, 'from:', downloadUrl)
-        } else {
-            console.error('No valid download URL available')
-        }
-    }
+    if (!targetVideo || !targetVideo.id) return
+    // Download via backend endpoint (streams local file or redirects to remote URL)
+    window.location.href = `/api/download/${targetVideo.id}`
 }
 
 const shareVideo = () => {
@@ -803,6 +904,8 @@ const shareVideo = () => {
 
 onMounted(() => {
     initializeRecreateMode()
+    // Sync available credits on mount
+    refreshCredits()
 
     // Add drag and drop event listeners
     const handleDragOver = (e) => {

@@ -36,7 +36,16 @@ class CheckActiveSubscription
             ->first();
 
         if (!$activeSubscription) {
-            // User doesn't have an active subscription
+            // No active subscription: zero out credits
+            if ($user->credits > 0) {
+                $previous = $user->credits;
+                $user->update(['credits' => 0]);
+                Log::info('CheckActiveSubscription: Subscription expired, resetting credits to zero', [
+                    'user_id' => $user->id,
+                    'previous_credits' => $previous
+                ]);
+            }
+
             Log::info('CheckActiveSubscription: No active subscription found, redirecting to pricing', ['user_id' => $user->id]);
             return redirect()->route('pricing')->with('error', 'You need an active subscription to access the video generator. Please subscribe to a plan first.');
         }

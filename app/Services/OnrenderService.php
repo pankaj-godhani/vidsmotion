@@ -51,8 +51,7 @@ class OnrenderService
             $response = Http::withHeaders([
                 'x-api-key' => $this->apiKey,
                 'Accept' => 'application/json'
-                //'Authorization' => 'Bearer ' . env('IT2V_API_KEY'),  // if bearer needed
-            ])->attach(
+            ])->timeout(180)->connectTimeout(30)->retry(2, 3000)->attach(
                 'file',  // key name expected by API
                 file_get_contents($file->getRealPath()),
                 $file->getClientOriginalName()

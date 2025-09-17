@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Upload;
 use App\Services\PiapiService;
+use App\Services\CreditService;
 use App\Services\OnrenderService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -28,7 +29,7 @@ class UploadController extends Controller
     {
         $request->validate([
             'prompt' => 'required|string|max:1000',
-            'image_url' => 'nullable|url', // Image URL from previous upload
+            'image_url' => 'required|url', // Image URL is required for generation
             'duration' => 'nullable|integer|min:1|max:10',
             'is_recreate' => 'nullable|boolean',
             'original_video_id' => 'nullable|string',
@@ -43,6 +44,21 @@ class UploadController extends Controller
             $isRecreate = $request->input('is_recreate', false);
             $originalVideoId = $request->input('original_video_id');
             $originalVideoTitle = $request->input('original_video_title');
+
+            // Enforce credits before starting generation (base 50 + 10 if prompt > 50 chars)
+            $promptLength = strlen(trim((string)$prompt));
+            $requiredCredits = 50 + ($promptLength > 80 ? 10 : 0);
+            $creditService = new CreditService();
+            if (!$creditService->hasCredits($request->user(), $requiredCredits)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Insufficient credits. Please buy credits to generate a video.',
+                    'data' => [
+                        'required' => $requiredCredits,
+                        'current' => $request->user()->credits,
+                    ],
+                ], 402);
+            }
 
             // Create upload record
             $upload = Upload::create([
@@ -83,6 +99,7 @@ class UploadController extends Controller
                     'metadata' => array_merge($currentMetadata, [
                         'piapi_task_id' => $result['task_id'],
                         'image_url' => $imageUrl,
+                        'required_credits' => $requiredCredits,
                     ])
                 ]);
 

@@ -166,21 +166,21 @@ class SeoService
                 [
                     "@type" => "Offer",
                     "name" => "Standard Plan",
-                    "price" => "50",
+                    "price" => "99",
                     "priceCurrency" => "INR",
                     "description" => "7 days access with basic features"
                 ],
                 [
                     "@type" => "Offer",
                     "name" => "Pro Monthly",
-                    "price" => "100",
+                    "price" => "299",
                     "priceCurrency" => "INR",
                     "description" => "1 month access with premium features"
                 ],
                 [
                     "@type" => "Offer",
                     "name" => "Premier Yearly",
-                    "price" => "1100",
+                    "price" => "3999",
                     "priceCurrency" => "INR",
                     "description" => "1 year access with all features"
                 ]
