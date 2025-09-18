@@ -136,7 +136,7 @@
 
                                         <!-- File Info -->
                                         <div>
-                                            <h4 class="text-white font-medium">{{ upload.original_filename }}</h4>
+                                            <h4 class="text-white font-medium">{{ upload.original_filename || 'generated_video.mp4' }}</h4>
                                             <div class="flex items-center space-x-4 mt-1">
                                                 <span class="text-sm text-gray-400">{{ formatFileSize(upload.file_size) }}</span>
                                                 <span class="text-sm text-gray-400">{{ formatDate(upload.created_at) }}</span>
@@ -153,7 +153,7 @@
                                                 <span v-else-if="upload.status === 'completed'" class="w-2 h-2 bg-green-400 rounded-full"></span>
                                                 <span v-else-if="upload.status === 'failed'" class="w-2 h-2 bg-red-400 rounded-full"></span>
                                                 <span v-else class="w-2 h-2 bg-yellow-400 rounded-full"></span>
-                                                <span>{{ upload.status.charAt(0).toUpperCase() + upload.status.slice(1) }}</span>
+                                                <span>{{ (upload.status || 'unknown').charAt(0).toUpperCase() + (upload.status || 'unknown').slice(1) }}</span>
                                             </span>
                                         </span>
 
@@ -254,21 +254,36 @@ const getStatusClass = (status) => {
 }
 
 const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    })
+    try {
+        if (!date) return '—'
+        const d = new Date(date)
+        if (isNaN(d.getTime())) return '—'
+        return d.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        })
+    } catch (_) {
+        return '—'
+    }
 }
 
 const formatFileSize = (bytes) => {
-    if (bytes === 0) return '0 Bytes'
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+    try {
+        if (bytes === null || bytes === undefined) return '—'
+        const n = Number(bytes)
+        if (!isFinite(n) || n < 0) return '—'
+        if (n === 0) return '0 Bytes'
+        const k = 1024
+        const sizes = ['Bytes', 'KB', 'MB', 'GB']
+        const i = Math.min(sizes.length - 1, Math.floor(Math.log(n) / Math.log(k)))
+        const value = n / Math.pow(k, i)
+        return `${value.toFixed(2)} ${sizes[i]}`
+    } catch (_) {
+        return '—'
+    }
 }
 
 const downloadResult = (id) => {

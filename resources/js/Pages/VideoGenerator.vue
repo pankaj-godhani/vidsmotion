@@ -453,6 +453,14 @@ const promptErrorMessage = ref('')
 const showCreditsTooltip = ref(false)
 const creditsTooltipMessage = ref('')
 
+// Clear image errors when we have a valid uploaded image URL
+watch(uploadedImageUrl, (newUrl) => {
+    if (newUrl && String(newUrl).trim().length > 0) {
+        imageErrorMessage.value = ''
+        uploadErrorMessage.value = ''
+    }
+})
+
 
 
 
@@ -599,10 +607,13 @@ const uploadImageToAPI = async (file) => {
         })
 
         if (response.data?.success && response.data?.data?.image_url) {
-            uploadedImageUrl.value = response.data.data.image_url
+            uploadedImageUrl.value = String(response.data.data.image_url || '').trim()
             isImageUploaded.value = true
             uploadErrorMessage.value = ''
             imageErrorMessage.value = ''
+
+            // Persist URL to survive any reactive resets
+            try { sessionStorage.setItem('uploaded_image_url', uploadedImageUrl.value) } catch (_) {}
 
             if (window.$notify) {
                 window.$notify({
@@ -674,6 +685,7 @@ const removeImage = () => {
     if (fileInput.value) {
         fileInput.value.value = ''
     }
+    try { sessionStorage.removeItem('uploaded_image_url') } catch (_) {}
 }
 
 const formatFileSize = (bytes) => {
@@ -685,11 +697,25 @@ const formatFileSize = (bytes) => {
 }
 
 const generateVideo = async () => {
+    // Clear stale errors
     promptErrorMessage.value = ''
+    imageErrorMessage.value = ''
+    uploadErrorMessage.value = ''
     if (!prompt.value.trim()) {
         promptErrorMessage.value = 'Prompt is required'
         return
     }
+    // Restore persisted image URL if needed
+    if (!uploadedImageUrl.value) {
+        try {
+            const cached = sessionStorage.getItem('uploaded_image_url')
+            if (cached) {
+                uploadedImageUrl.value = cached
+                isImageUploaded.value = true
+            }
+        } catch (_) {}
+    }
+
     if (!uploadedImageUrl.value) {
         imageErrorMessage.value = 'Reference image is required'
         return
