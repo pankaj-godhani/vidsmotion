@@ -295,6 +295,64 @@
                     }
                 ]
             }
+        },
+        "/my-files/stats": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Get counts of total, completed, processing, failed for authenticated user",
+                "operationId": "9c9477d88164aef83ff68ee526e4480a",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/my-files": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "List completed generated videos for the authenticated user",
+                "operationId": "5c3e0db9588d9de2f6b6f956cc123050",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -314,6 +372,10 @@
         {
             "name": "User",
             "description": "User"
+        },
+        {
+            "name": "Files",
+            "description": "Files"
         }
     ]
 }

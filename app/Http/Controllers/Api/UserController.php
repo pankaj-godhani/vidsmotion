@@ -21,19 +21,40 @@ class UserController extends Controller
      */
     public function stats(Request $request): JsonResponse
     {
-        $userId = auth()->id();
+        $userId = $request->user()->id;
 
-        $stats = [
-            'totalUploads' => Upload::where('user_id', $userId)->count(),
-            'completedUploads' => Upload::where('user_id', $userId)->where('status', 'completed')->count(),
-            'processingUploads' => Upload::where('user_id', $userId)->whereIn('status', ['pending', 'processing'])->count(),
-            'failedUploads' => Upload::where('user_id', $userId)->where('status', 'failed')->count(),
+        $data = [
+            'total' => Upload::where('user_id', $userId)->count(),
+            'completed' => Upload::where('user_id', $userId)->where('status', 'completed')->count(),
+            'processing' => Upload::where('user_id', $userId)->whereIn('status', ['pending', 'processing'])->count(),
+            'failed' => Upload::where('user_id', $userId)->where('status', 'failed')->count(),
         ];
 
         return response()->json([
             'success' => true,
-            'data' => $stats
+            'data' => $data
         ]);
+    }
+
+    /**
+     * @OA\Get(
+     *   path="/my-files/stats",
+     *   summary="Get counts of total, completed, processing, failed for authenticated user",
+     *   tags={"Files"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\Response(response=200, description="OK")
+     * )
+     */
+    public function myFilesStats(Request $request): JsonResponse
+    {
+        $userId = $request->user()->id;
+        $data = [
+            'total' => Upload::where('user_id', $userId)->count(),
+            'completed' => Upload::where('user_id', $userId)->where('status', 'completed')->count(),
+            'processing' => Upload::where('user_id', $userId)->whereIn('status', ['pending', 'processing'])->count(),
+            'failed' => Upload::where('user_id', $userId)->where('status', 'failed')->count(),
+        ];
+        return response()->json(['success' => true, 'data' => $data]);
     }
 
     public function uploads(Request $request): JsonResponse
@@ -57,6 +78,52 @@ class UserController extends Controller
             'success' => true,
             'data' => [
                 'credits' => $request->user()->credits,
+            ]
+        ]);
+    }
+
+    /**
+     * @OA\Get(
+     *   path="/my-files",
+     *   summary="List completed generated videos for the authenticated user",
+     *   tags={"Files"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\Parameter(name="page", in="query", required=false, @OA\Schema(type="integer", example=1)),
+     *   @OA\Parameter(name="per_page", in="query", required=false, @OA\Schema(type="integer", example=10)),
+     *   @OA\Response(response=200, description="OK")
+     * )
+     */
+    public function myFiles(Request $request): JsonResponse
+    {
+        $userId = $request->user()->id;
+        $perPage = (int) max(1, min(100, (int) $request->query('per_page', 10)));
+
+        $uploads = Upload::where('user_id', $userId)
+            ->where('status', 'completed')
+            ->orderByDesc('created_at')
+            ->paginate($perPage);
+
+        $items = collect($uploads->items())->map(function (Upload $u) {
+            $downloadApiUrl = url('/api/token-download/' . $u->id);
+            return [
+                'id' => $u->id,
+                'filename' => $u->original_filename ?: $u->filename,
+                'prompt' => $u->prompt,
+                'file_size' => $u->file_size,
+                'created_at' => $u->created_at,
+                'video_url' => $u->video_url,
+                'download_url' => $downloadApiUrl,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'items' => $items,
+                'current_page' => $uploads->currentPage(),
+                'per_page' => $uploads->perPage(),
+                'total' => $uploads->total(),
+                'last_page' => $uploads->lastPage(),
             ]
         ]);
     }

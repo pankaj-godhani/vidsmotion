@@ -48,4 +48,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/users/{id}/toggle-status', [App\Http\Controllers\Api\AdminController::class, 'toggleUserStatus'])->name('api.admin.users.toggle-status');
         Route::post('/uploads/{id}/retry', [App\Http\Controllers\Api\AdminController::class, 'retryUpload'])->name('api.admin.uploads.retry');
     });
+
+    // My Files: list completed videos with download URLs
+    Route::get('/my-files', [App\Http\Controllers\Api\UserController::class, 'myFiles'])->name('api.user.my-files');
+    // My Files stats
+    Route::get('/my-files/stats', [App\Http\Controllers\Api\UserController::class, 'myFilesStats'])->name('api.user.my-files.stats');
 });
