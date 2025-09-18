@@ -29,8 +29,12 @@ class PiapiWebhookController extends Controller
             Log::info('Piapi Webhook Received', ['data' => $request->all()]);
 
             $taskId = $request->input('task_id');
-            $status = $request->input('status');
-            $result = $request->input('result');
+            $status = (string) $request->input('status', 'processing');
+            $rawResult = $request->input('result');
+            // Normalize webhook result to a safe array
+            $result = is_array($rawResult)
+                ? $rawResult
+                : (is_string($rawResult) ? (json_decode($rawResult, true) ?: []) : []);
 
             if (!$taskId) {
                 Log::error('Piapi Webhook: Missing task_id');

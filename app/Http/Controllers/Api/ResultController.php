@@ -13,6 +13,7 @@ class ResultController extends Controller
 {
     public function result(Request $request, $id): JsonResponse
     {
+        /** @var \App\Models\Upload|null $upload */
         $upload = Upload::where('id', $id)
             ->where('user_id', auth()->id())
             ->first();
@@ -51,6 +52,7 @@ class ResultController extends Controller
      */
     public function download(Request $request, $id)
     {
+        /** @var \App\Models\Upload|null $upload */
         $upload = Upload::where('id', $id)
             ->where('user_id', auth()->id())
             ->first();
@@ -70,8 +72,12 @@ class ResultController extends Controller
         }
 
         // If local file is missing but we have a remote URL, fall back to redirecting
-        $metadata = is_array($upload->metadata) ? $upload->metadata : (is_string($upload->metadata) ? json_decode($upload->metadata, true) : []);
-        $remoteUrl = $metadata['video_url'] ?? ($upload->result_data['video_url'] ?? null);
+        $metadata = is_array($upload->metadata)
+            ? $upload->metadata
+            : (is_string($upload->metadata) ? (json_decode($upload->metadata, true) ?: []) : []);
+
+        $remoteUrl = $metadata['video_url']
+            ?? (is_array($upload->result_data) ? ($upload->result_data['video_url'] ?? null) : null);
 
         if (empty($upload->file_path) || !Storage::disk('public')->exists($upload->file_path)) {
             if ($remoteUrl) {

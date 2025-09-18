@@ -9,6 +9,16 @@ use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
+    /**
+     * @OA\Get(
+     *   path="/user/credits",
+     *   summary="Get authenticated user's credits",
+     *   tags={"User"},
+     *   security={{"bearerAuth":{}}},
+     *   @OA\Response(response=200, description="OK"),
+     *   @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function stats(Request $request): JsonResponse
     {
         $userId = auth()->id();
