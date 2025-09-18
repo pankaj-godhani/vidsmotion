@@ -92,13 +92,7 @@
                                             <p class="text-sm font-medium text-white">{{ page.props.auth.user.name }}</p>
                                             <p class="text-xs text-gray-400">{{ page.props.auth.user.email }}</p>
                                         </div>
-                                        <Link
-                                            :href="route('video-generator')"
-                                            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                                            @click="showUserMenu = false"
-                                        >
-                                            Video Generator
-                                        </Link>
+                                        
                                         <Link
                                             :href="route('my-files')"
                                             class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
@@ -198,14 +192,7 @@
                         Pricing
                     </Link>
                     <!-- Create Video Button for logged-in users with active subscription in mobile menu -->
-                    <Link
-                        v-if="page.props.auth.user && page.props.auth.activeSubscription"
-                        :href="route('video-generator')"
-                        class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all text-sm font-medium text-center"
-                        @click="isMenuOpen = false"
-                    >
-                        Create Video
-                    </Link>
+                    
                     <div v-if="canLogin" class="pt-4 border-t border-gray-800">
                         <template v-if="page.props.auth.user">
                             <!-- Mobile User Menu -->
@@ -230,13 +217,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <Link
-                                    :href="route('video-generator')"
-                                    class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
-                                    @click="isMenuOpen = false"
-                                >
-                                    Video Generator
-                                </Link>
+                                
                                 <Link
                                     :href="route('my-files')"
                                     class="block text-gray-300 hover:text-white transition-colors text-sm py-2"
