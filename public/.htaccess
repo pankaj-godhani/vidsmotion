@@ -5,6 +5,11 @@
 
     RewriteEngine On
 
+    # Force HTTPS (proxy-aware)
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -12,6 +17,11 @@
     # Handle X-XSRF-Token Header
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Allow direct access to vite build assets (JS, CSS, images, fonts)
+    RewriteCond %{REQUEST_URI} ^/build/
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
 
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
@@ -97,9 +107,7 @@
     Header unset X-Powered-By
 </IfModule>
 
-# Force HTTPS (uncomment when SSL is configured)
-# RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
 
 # Remove www (optional - uncomment if you want to remove www)
 # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
