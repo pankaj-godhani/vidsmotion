@@ -18,6 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->web(prepend: [
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
@@ -25,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Ensure API routes don't have CSRF protection
         $middleware->api(prepend: [
+            \App\Http\Middleware\StripCsrfFromApi::class,
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
 
