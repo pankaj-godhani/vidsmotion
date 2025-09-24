@@ -22,6 +22,18 @@ Route::get('/', function () {
     ]);
 })->name('welcome');
 
+// Debug route to test CSRF token
+Route::get('/debug-csrf', function () {
+    return response()->json([
+        'csrf_token' => csrf_token(),
+        'session_id' => session()->getId(),
+        'app_url' => config('app.url'),
+        'session_domain' => config('session.domain'),
+        'session_secure' => config('session.secure'),
+        'session_same_site' => config('session.same_site'),
+    ]);
+});
+
 // Features Route
 Route::get('/features', function () {
     $seoData = SeoService::getPageSeo('features');
