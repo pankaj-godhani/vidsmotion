@@ -150,7 +150,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user has sufficient credits.
+     * Check  if user has sufficient credits.
      *
      * @param int $credits
      * @return bool
