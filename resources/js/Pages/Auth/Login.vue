@@ -214,6 +214,7 @@ onMounted(() => {
 
                         <form @submit.prevent="submit" class="space-y-6">
                             <!-- Email Field -->
+                            <meta name="csrf-token" content="{{ csrf_token() }}">
                             <div>
                                 <InputLabel for="email" value="Email Address" class="text-gray-300 mb-2" />
                                 <div class="relative">
