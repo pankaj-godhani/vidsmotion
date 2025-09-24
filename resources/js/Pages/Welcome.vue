@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import axios from 'axios';
 import Footer from '@/Components/Footer.vue';
 import HeaderMenu from '@/Components/HeaderMenu.vue';
 import NotificationManager from '@/Components/NotificationManager.vue';
@@ -30,164 +31,39 @@ const selectedVideo = ref(null);
 // AI Animation particles
 const particles = ref([]);
 
-// Sample video data
-const allVideos = ref([
-    {
-        id: 1,
-        title: "Futuristic cityscape at sunset",
-        description: "A cinematic view of a futuristic city with flying cars and neon lights",
-        duration: "0:05",
-        views: "1.2k",
-        timeAgo: "2 days ago",
-        gradient: "from-purple-500/20 to-pink-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
-    },
-    {
-        id: 2,
-        title: "Ocean waves in slow motion",
-        description: "Beautiful ocean waves crashing against rocks in cinematic slow motion",
-        duration: "0:08",
-        views: "856",
-        timeAgo: "5 days ago",
-        gradient: "from-blue-500/20 to-cyan-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4"
-    },
-    {
-        id: 3,
-        title: "Forest with magical creatures",
-        description: "An enchanted forest with glowing mushrooms and mystical creatures",
-        duration: "0:12",
-        views: "2.1k",
-        timeAgo: "1 week ago",
-        gradient: "from-green-500/20 to-emerald-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_5mb.mp4"
-    },
-    {
-        id: 4,
-        title: "Space exploration journey",
-        description: "A spacecraft traveling through the cosmos with stunning nebula effects",
-        duration: "0:06",
-        views: "3.4k",
-        timeAgo: "3 days ago",
-        gradient: "from-orange-500/20 to-red-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1464822759844-d150baec0b0b?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_640x360_1mb.mp4"
-    },
-    {
-        id: 5,
-        title: "Abstract digital art",
-        description: "Flowing digital patterns and geometric shapes in motion",
-        duration: "0:10",
-        views: "892",
-        timeAgo: "1 day ago",
-        gradient: "from-indigo-500/20 to-purple-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_640x360_2mb.mp4"
-    },
-    {
-        id: 6,
-        title: "Underwater coral reef",
-        description: "Colorful coral reef with tropical fish swimming in crystal clear water",
-        duration: "0:07",
-        views: "1.5k",
-        timeAgo: "4 days ago",
-        gradient: "from-teal-500/20 to-cyan-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_640x360_5mb.mp4"
-    },
-    {
-        id: 7,
-        title: "Mountain peak at dawn",
-        description: "Majestic mountain peaks with golden sunrise lighting and misty valleys",
-        duration: "0:09",
-        views: "2.3k",
-        timeAgo: "6 days ago",
-        gradient: "from-amber-500/20 to-yellow-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_320x240_1mb.mp4"
-    },
-    {
-        id: 8,
-        title: "Cyberpunk street scene",
-        description: "Neon-lit streets with futuristic architecture and flying vehicles",
-        duration: "0:11",
-        views: "1.8k",
-        timeAgo: "2 days ago",
-        gradient: "from-violet-500/20 to-fuchsia-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1557683316-973673baf926?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_320x240_2mb.mp4"
-    },
-    {
-        id: 9,
-        title: "Desert sand dunes",
-        description: "Endless sand dunes with dramatic shadows and wind patterns",
-        duration: "0:08",
-        views: "967",
-        timeAgo: "1 week ago",
-        gradient: "from-yellow-500/20 to-orange-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_320x240_5mb.mp4"
-    },
-    {
-        id: 10,
-        title: "Arctic aurora display",
-        description: "Northern lights dancing across the arctic sky with snow-covered landscape",
-        duration: "0:13",
-        views: "3.1k",
-        timeAgo: "4 days ago",
-        gradient: "from-cyan-500/20 to-blue-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_160x120_1mb.mp4"
-    },
-    {
-        id: 11,
-        title: "Tropical waterfall",
-        description: "Crystal clear waterfall cascading through lush tropical vegetation",
-        duration: "0:07",
-        views: "1.4k",
-        timeAgo: "3 days ago",
-        gradient: "from-emerald-500/20 to-teal-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_160x120_2mb.mp4"
-    },
-    {
-        id: 12,
-        title: "Steampunk laboratory",
-        description: "Victorian-era laboratory with brass machinery and steam-powered devices",
-        duration: "0:10",
-        views: "1.7k",
-        timeAgo: "5 days ago",
-        gradient: "from-rose-500/20 to-pink-500/20",
-        author: "AI Creator",
-        thumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop",
-        videoUrl: "https://sample-videos.com/zip/10/mp4/SampleVideo_160x120_5mb.mp4"
-    }
-]);
+// Explore data (from API)
+const allVideos = ref([]);
+const currentPage = ref(1);
+const lastPage = ref(1);
+const perPage = ref(12);
 
 
 const loadMoreVideos = async () => {
+    if (visibleVideos.value < allVideos.value.length) {
+        visibleVideos.value = Math.min(visibleVideos.value + 6, allVideos.value.length);
+        return;
+    }
+    if (currentPage.value >= lastPage.value) return;
     isLoadingMore.value = true;
-
-    // Simulate loading delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Show 6 more videos
-    visibleVideos.value = Math.min(visibleVideos.value + 6, allVideos.value.length);
-    isLoadingMore.value = false;
+    try {
+        const next = currentPage.value + 1;
+        const params = new URLSearchParams({
+            page: String(next),
+            per_page: String(perPage.value),
+            sort: sortBy.value,
+            filter: activeFilter.value,
+        });
+        const { data } = await axios.get(`/api/explore?${params.toString()}`);
+        const items = data?.data?.items || [];
+        allVideos.value.push(...items.map(mapApiItem));
+        currentPage.value = data?.data?.current_page || next;
+        lastPage.value = data?.data?.last_page || currentPage.value;
+        visibleVideos.value = Math.min(visibleVideos.value + 6, allVideos.value.length);
+    } catch (e) {
+        console.error('Failed to load more home explore videos', e);
+    } finally {
+        isLoadingMore.value = false;
+    }
 };
 
 // Filtering & sorting (align with Explore)
@@ -201,9 +77,10 @@ const activeFilter = ref('all');
 const sortBy = ref('latest');
 
 const parseViews = (viewsString) => {
-    const num = parseFloat(String(viewsString || '').replace(/[^\d.]/g, ''));
-    if (String(viewsString).includes('k')) return num * 1000;
-    if (String(viewsString).includes('M')) return num * 1000000;
+    const str = String(viewsString || '');
+    const num = parseFloat(str.replace(/[^\d.]/g, ''));
+    if (str.includes('k')) return num * 1000;
+    if (str.includes('M')) return num * 1000000;
     return isNaN(num) ? 0 : num;
 };
 const parseTimeAgo = (timeAgoString) => {
@@ -254,7 +131,7 @@ watch(sortBy, async () => {
 });
 
 const hasMoreVideos = computed(() => {
-    return visibleVideos.value < allVideos.value.length;
+    return visibleVideos.value < allVideos.value.length || currentPage.value < lastPage.value;
 });
 
 // Video modal functionality
@@ -301,11 +178,71 @@ onMounted(() => {
             opacity: Math.random() * 0.5 + 0.1,
         });
     }
+    // Initial fetch from Explore API
+    fetchExplore();
 });
 
 onUnmounted(() => {
     // Cleanup if needed
 });
+
+// Helpers for mapping API to UI model
+const humanizeTimeAgo = (iso) => {
+    if (!iso) return 'just now';
+    const d = new Date(iso);
+    const diff = Math.max(0, (Date.now() - d.getTime()) / 1000);
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return `${Math.floor(diff/60)} min ago`;
+    if (diff < 86400) return `${Math.floor(diff/3600)} hour ago`;
+    if (diff < 604800) return `${Math.floor(diff/86400)} day ago`;
+    return d.toLocaleDateString();
+};
+
+const formatDuration = (seconds) => {
+    const s = Math.max(0, Number(seconds) || 0);
+    const m = Math.floor(s / 60);
+    const r = Math.floor(s % 60);
+    return `${m}:${r.toString().padStart(2,'0')}`;
+};
+
+const formatViewsLabel = (num) => {
+    const n = Number(num) || 0;
+    if (n >= 1_000_000) return `${(n/1_000_000).toFixed(1)}M`;
+    if (n >= 1_000) return `${(n/1_000).toFixed(1)}k`;
+    return `${n}`;
+};
+
+const mapApiItem = (item) => {
+    return {
+        id: item.id,
+        title: item.prompt || 'Untitled video',
+        author: item.author || 'AI Creator',
+        thumbnail: item.thumbnail,
+        videoUrl: item.videoUrl,
+        duration: formatDuration(item.duration || 5),
+        views: formatViewsLabel(item.views || 0),
+        timeAgo: humanizeTimeAgo(item.created_at),
+    };
+};
+
+const fetchExplore = async () => {
+    try {
+        const params = new URLSearchParams({
+            page: String(currentPage.value),
+            per_page: String(perPage.value),
+            sort: sortBy.value,
+            filter: activeFilter.value,
+        });
+        const { data } = await axios.get(`/api/explore?${params.toString()}`);
+        const items = data?.data?.items || [];
+        allVideos.value = items.map(mapApiItem);
+        currentPage.value = data?.data?.current_page || 1;
+        lastPage.value = data?.data?.last_page || 1;
+        visibleVideos.value = Math.min(6, allVideos.value.length);
+    } catch (e) {
+        console.error('Failed to fetch home explore videos', e);
+    }
+};
 </script>
 
 <template>

@@ -9,16 +9,6 @@ use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
-    /**
-     * @OA\Get(
-     *   path="/user/credits",
-     *   summary="Get authenticated user's credits",
-     *   tags={"User"},
-     *   security={{"bearerAuth":{}}},
-     *   @OA\Response(response=200, description="OK"),
-     *   @OA\Response(response=401, description="Unauthenticated")
-     * )
-     */
     public function stats(Request $request): JsonResponse
     {
         $userId = $request->user()->id;
@@ -36,15 +26,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Get(
-     *   path="/my-files/stats",
-     *   summary="Get counts of total, completed, processing, failed for authenticated user",
-     *   tags={"Files"},
-     *   security={{"bearerAuth":{}}},
-     *   @OA\Response(response=200, description="OK")
-     * )
-     */
     public function myFilesStats(Request $request): JsonResponse
     {
         $userId = $request->user()->id;
@@ -82,17 +63,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Get(
-     *   path="/my-files",
-     *   summary="List completed generated videos for the authenticated user",
-     *   tags={"Files"},
-     *   security={{"bearerAuth":{}}},
-     *   @OA\Parameter(name="page", in="query", required=false, @OA\Schema(type="integer", example=1)),
-     *   @OA\Parameter(name="per_page", in="query", required=false, @OA\Schema(type="integer", example=10)),
-     *   @OA\Response(response=200, description="OK")
-     * )
-     */
     public function myFiles(Request $request): JsonResponse
     {
         $userId = $request->user()->id;

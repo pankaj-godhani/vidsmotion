@@ -70,15 +70,15 @@
                                 </span>
                             </div>
                             <div class="text-center">
-                                <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors duration-300">7 days</h3>
-                                <p class="text-gray-400 mb-6">7 days trial</p>
+                                <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors duration-300">Standard Plan</h3>
+                                <p class="text-gray-400 mb-6">7 Days trial</p>
                                 <div class="mb-8 group-hover:scale-110 transition-transform duration-300">
                                     <span class="text-4xl font-bold text-white group-hover:text-purple-400 transition-colors duration-300">₹99</span>
                                 </div>
 
                                 <ul class="space-y-4 mb-8 text-left">
                                     <li class="flex items-center group-hover:translate-x-2 transition-transform duration-300">
-                                        <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0 group-hover:text-purple-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
                                         <span class="text-gray-300 group-hover:text-white transition-colors duration-300">4 video generations per Plan</span>
@@ -107,7 +107,12 @@
                                         </svg>
                                         <span class="text-gray-300">Community support</span>
                                     </li>
-
+                                    <li class="flex items-center">
+                                        <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span class="text-gray-300">Email support</span>
+                                    </li>
                                 </ul>
 
                                 <button
@@ -115,7 +120,7 @@
                                     @click="redirectToLoginWithIntent('Standard', 99)"
                                     class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium"
                                 >
-                                    Subscribe Standard
+                                    Subscribe Now
                                 </button>
                                 <button
                                     v-else-if="$page.props.auth.user && !hasActiveSubscription"
@@ -171,7 +176,7 @@
                             </div>
 
                             <div class="text-center">
-                                <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300">Monthly</h3>
+                                <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300">Pro Plan</h3>
                                 <p class="text-gray-400 mb-6">Monthly billing</p>
                                 <div class="mb-8 group-hover:scale-110 transition-transform duration-300">
                                     <span class="text-4xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300">₹299</span>
@@ -222,7 +227,7 @@
                                     @click="redirectToLoginWithIntent('Pro Monthly', 299)"
                                     class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium"
                                 >
-                                    Subscribe Pro Monthly
+                                    Subscribe Now
                                 </button>
                                 <button
                                     v-else-if="$page.props.auth.user && !hasActiveSubscription"
@@ -271,7 +276,7 @@
                                 </span>
                             </div>
                             <div class="text-center">
-                                <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors duration-300">Yearly</h3>
+                                <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors duration-300">Premier Plan</h3>
                                 <p class="text-gray-400 mb-6">Yearly billing</p>
                                 <div class="mb-8 group-hover:scale-110 transition-transform duration-300">
                                     <span class="text-4xl font-bold text-white group-hover:text-cyan-400 transition-colors duration-300">₹3999</span>
@@ -321,7 +326,7 @@
                                     @click="redirectToLoginWithIntent('Premier Yearly', 3999)"
                                     class="w-full block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-all text-center font-medium"
                                 >
-                                    Subscribe Premier Yearly
+                                    Subscribe Now
                                 </button>
                                 <button
                                     v-else-if="$page.props.auth.user && !hasActiveSubscription"

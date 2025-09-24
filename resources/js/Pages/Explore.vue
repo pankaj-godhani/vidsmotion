@@ -154,7 +154,7 @@
                 </div>
 
                 <!-- Load More Button -->
-                <div class="text-center mt-12">
+                <div class="text-center mt-12" v-if="hasMoreVideos">
                     <button
                         @click="loadMoreVideos"
                         :disabled="isLoadingMore"
@@ -241,6 +241,7 @@
 <script setup>
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import axios from 'axios';
 import Footer from '@/Components/Footer.vue';
 import HeaderMenu from '@/Components/HeaderMenu.vue';
 import NotificationManager from '@/Components/NotificationManager.vue';
@@ -289,107 +290,21 @@ const filters = ref([
     { id: 'artistic', name: 'Artistic' }
 ]);
 
-// Sample video data
-const allVideos = ref([
-    {
-        id: 1,
-        title: "Futuristic cityscape at sunset with flying cars",
-        author: "Alex Chen",
-        thumbnail: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=400&h=300&fit=crop",
-        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-        duration: "0:05",
-        views: "45.2k",
-        timeAgo: "1 hour ago",
-        category: "cinematic"
-    },
-    {
-        id: 2,
-        title: "Ocean waves in slow motion with dramatic lighting",
-        author: "Sarah Johnson",
-        thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-        duration: "0:08",
-        views: "12.8k",
-        timeAgo: "3 hours ago",
-        category: "realistic"
-    },
-    {
-        id: 3,
-        title: "Magical forest with glowing creatures and mushrooms",
-        author: "Mike Rodriguez",
-        thumbnail: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop",
-        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-        duration: "0:12",
-        views: "8.5k",
-        timeAgo: "2 days ago",
-        category: "artistic"
-    },
-    {
-        id: 4,
-        title: "Space exploration journey through colorful nebula",
-        author: "Emma Wilson",
-        thumbnail: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=300&fit=crop",
-        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-        duration: "0:06",
-        views: "67.3k",
-        timeAgo: "4 hours ago",
-        category: "cinematic"
-    },
-    {
-        id: 5,
-        title: "Abstract digital art with flowing patterns",
-        author: "David Kim",
-        thumbnail: "https://images.unsplash.com/photo-1557683316-973673baf926?w=400&h=300&fit=crop",
-        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-        duration: "0:10",
-        views: "3.1k",
-        timeAgo: "1 week ago",
-        category: "artistic"
-    },
-    {
-        id: 6,
-        title: "Underwater coral reef with tropical fish",
-        author: "Lisa Park",
-        thumbnail: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop",
-        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-        duration: "0:07",
-        views: "23.7k",
-        timeAgo: "6 hours ago",
-        category: "realistic"
-    },
-    {
-        id: 7,
-        title: "Mountain peak at dawn with golden sunrise",
-        author: "Tom Anderson",
-        thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-        duration: "0:09",
-        views: "15.2k",
-        timeAgo: "3 days ago",
-        category: "cinematic"
-    },
-    {
-        id: 8,
-        title: "Cyberpunk street scene with neon lights",
-        author: "Rachel Green",
-        thumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop",
-        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-        duration: "0:11",
-        views: "5.8k",
-        timeAgo: "2 weeks ago",
-        category: "artistic"
-    }
-]);
+// Explore data (fetched from API)
+const allVideos = ref([]);
+const currentPage = ref(1);
+const lastPage = ref(1);
+const perPage = ref(12);
 
 // Helper functions for sorting
-const parseViews = (viewsString) => {
+const parseViews = (value) => {
+    if (typeof value === 'number') return value;
+    if (!value) return 0;
+    const viewsString = String(value);
     const num = parseFloat(viewsString.replace(/[^\d.]/g, ''));
-    if (viewsString.includes('k')) {
-        return num * 1000;
-    } else if (viewsString.includes('M')) {
-        return num * 1000000;
-    }
-    return num;
+    if (viewsString.includes('k')) return num * 1000;
+    if (viewsString.includes('M')) return num * 1000000;
+    return num || 0;
 };
 
 const parseTimeAgo = (timeAgoString) => {
@@ -413,6 +328,46 @@ const parseTimeAgo = (timeAgoString) => {
         return now.getTime() - (years * 365 * 24 * 60 * 60 * 1000);
     }
     return now.getTime(); // Default to now if can't parse
+};
+
+const humanizeTimeAgo = (isoDate) => {
+    if (!isoDate) return 'just now';
+    const d = new Date(isoDate);
+    const diff = Math.max(0, (Date.now() - d.getTime()) / 1000);
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return `${Math.floor(diff/60)} min ago`;
+    if (diff < 86400) return `${Math.floor(diff/3600)} hour ago`;
+    if (diff < 604800) return `${Math.floor(diff/86400)} day ago`;
+    return d.toLocaleDateString();
+};
+
+const formatDuration = (seconds) => {
+    const s = Math.max(0, Number(seconds) || 0);
+    const m = Math.floor(s / 60);
+    const r = Math.floor(s % 60);
+    return `${m}:${r.toString().padStart(2,'0')}`;
+};
+
+const formatViewsLabel = (num) => {
+    const n = Number(num) || 0;
+    if (n >= 1_000_000) return `${(n/1_000_000).toFixed(1)}M`;
+    if (n >= 1_000) return `${(n/1_000).toFixed(1)}k`;
+    return `${n}`;
+};
+
+const mapApiItem = (item) => {
+    const tags = Array.isArray(item.tags) ? item.tags : [];
+    return {
+        id: item.id,
+        title: item.prompt || 'Untitled video',
+        author: item.author || 'Unknown',
+        thumbnail: item.thumbnail,
+        videoUrl: item.videoUrl,
+        duration: formatDuration(item.duration || 5),
+        views: formatViewsLabel(item.views || 0),
+        timeAgo: humanizeTimeAgo(item.created_at),
+        category: (tags[0] || 'artistic').toLowerCase(),
+    };
 };
 
 // Computed properties
@@ -449,7 +404,26 @@ const filteredVideos = computed(() => {
     return filtered;
 });
 
+const hasMoreVideos = computed(() => currentPage.value < lastPage.value);
+
 // Methods
+const fetchExplore = async () => {
+    try {
+        const params = new URLSearchParams({
+            page: String(currentPage.value),
+            per_page: String(perPage.value),
+            sort: sortBy.value,
+            filter: activeFilter.value,
+        });
+        const { data } = await axios.get(`/api/explore?${params.toString()}`);
+        const items = data?.data?.items || [];
+        allVideos.value = items.map(mapApiItem);
+        currentPage.value = data?.data?.current_page || 1;
+        lastPage.value = data?.data?.last_page || 1;
+    } catch (e) {
+        console.error('Failed to fetch explore videos', e);
+    }
+};
 const openVideoModal = (video) => {
     selectedVideo.value = video;
 };
@@ -517,61 +491,28 @@ const recreateVideo = (video) => {
 
 
 const loadMoreVideos = async () => {
+    if (currentPage.value >= lastPage.value) {
+        return;
+    }
     isLoadingMore.value = true;
-
-    // Simulate loading delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Add 4 more sample videos
-    const newVideos = [
-        {
-            id: allVideos.value.length + 1,
-            title: "Desert landscape with sand dunes at sunset",
-            author: "John Smith",
-            thumbnail: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=400&h=300&fit=crop",
-            videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-            duration: "0:08",
-            views: "9.1k",
-            timeAgo: "1 week ago",
-            category: "realistic"
-        },
-        {
-            id: allVideos.value.length + 2,
-            title: "Fantasy castle in the clouds",
-            author: "Maria Garcia",
-            thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-            videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
-            duration: "0:06",
-            views: "12.1k",
-            timeAgo: "1 week ago",
-            category: "artistic"
-        },
-        {
-            id: allVideos.value.length + 3,
-            title: "Urban street art with vibrant colors",
-            author: "Carlos Mendez",
-            thumbnail: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=300&fit=crop",
-            videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
-            duration: "0:07",
-            views: "18.3k",
-            timeAgo: "1 week ago",
-            category: "artistic"
-        },
-        {
-            id: allVideos.value.length + 4,
-            title: "Snow-covered mountain peak at dawn",
-            author: "Anna Thompson",
-            thumbnail: "https://images.unsplash.com/photo-1464822759844-d150baec0b0b?w=400&h=300&fit=crop",
-            videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
-            duration: "0:09",
-            views: "21.7k",
-            timeAgo: "1 week ago",
-            category: "cinematic"
-        }
-    ];
-
-    allVideos.value.push(...newVideos);
-    isLoadingMore.value = false;
+    try {
+        const nextPage = currentPage.value + 1;
+        const params = new URLSearchParams({
+            page: String(nextPage),
+            per_page: String(perPage.value),
+            sort: sortBy.value,
+            filter: activeFilter.value,
+        });
+        const { data } = await axios.get(`/api/explore?${params.toString()}`);
+        const items = data?.data?.items || [];
+        allVideos.value.push(...items.map(mapApiItem));
+        currentPage.value = data?.data?.current_page || nextPage;
+        lastPage.value = data?.data?.last_page || currentPage.value;
+    } catch (e) {
+        console.error('Failed to load more explore videos', e);
+    } finally {
+        isLoadingMore.value = false;
+    }
 };
 
 const logout = () => {
@@ -592,10 +533,15 @@ const closeDropdowns = (event) => {
 watch(sortBy, async (newValue, oldValue) => {
     console.log(`Sort changed from ${oldValue} to ${newValue}`);
     isSorting.value = true;
+    currentPage.value = 1;
+    await fetchExplore();
+    isSorting.value = false;
+});
 
-    // Simulate sorting delay for better UX
-    await new Promise(resolve => setTimeout(resolve, 800));
-
+watch(activeFilter, async () => {
+    isSorting.value = true;
+    currentPage.value = 1;
+    await fetchExplore();
     isSorting.value = false;
 });
 
@@ -603,6 +549,8 @@ watch(sortBy, async (newValue, oldValue) => {
 onMounted(() => {
     document.addEventListener('click', closeDropdowns);
     console.log('Explore page mounted, initial sort:', sortBy.value);
+    // Initial load from API
+    fetchExplore();
 });
 
 onUnmounted(() => {

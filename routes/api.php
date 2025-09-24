@@ -5,23 +5,34 @@ use App\Http\Controllers\Api\StatusController;
 use App\Http\Controllers\Api\ResultController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\StripCsrfFromApi;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful as SanctumStateful;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
 // Token issuance (password to PAT) for Swagger and external clients
-Route::post('/auth/token', [App\Http\Controllers\Api\AuthTokenController::class, 'issueToken'])->name('api.auth.token');
+Route::middleware([StripCsrfFromApi::class])->post('/auth/token', [App\Http\Controllers\Api\AuthTokenController::class, 'issueToken'])
+    ->name('api.auth.token');
 
-// Auth endpoints
-Route::post('/auth/register', [App\Http\Controllers\Api\AuthController::class, 'register'])->name('api.auth.register');
-Route::post('/auth/login', [App\Http\Controllers\Api\AuthController::class, 'login'])->name('api.auth.login');
-Route::post('/auth/forgot-password', [App\Http\Controllers\Api\AuthController::class, 'forgotPassword'])->name('api.auth.forgot');
-Route::post('/auth/reset-password', [App\Http\Controllers\Api\AuthController::class, 'resetPassword'])->name('api.auth.reset');
-Route::middleware('auth:sanctum')->group(function () {
+// Public auth endpoints (stateless, no CSRF/stateful sanctum)
+Route::middleware([StripCsrfFromApi::class])->post('/auth/register', [App\Http\Controllers\Api\AuthController::class, 'register'])
+    ->withoutMiddleware([SanctumStateful::class])
+    ->name('api.auth.register');
+Route::middleware([StripCsrfFromApi::class])->post('/auth/login', [App\Http\Controllers\Api\AuthController::class, 'login'])
+    ->withoutMiddleware([SanctumStateful::class])
+    ->name('api.auth.login');
+Route::middleware([StripCsrfFromApi::class])->post('/auth/forgot-password', [App\Http\Controllers\Api\AuthController::class, 'forgotPassword'])
+    ->withoutMiddleware([SanctumStateful::class])
+    ->name('api.auth.forgot');
+Route::middleware([StripCsrfFromApi::class])->post('/auth/reset-password', [App\Http\Controllers\Api\AuthController::class, 'resetPassword'])
+    ->withoutMiddleware([SanctumStateful::class])
+    ->name('api.auth.reset');
+Route::middleware([StripCsrfFromApi::class,'auth:sanctum'])->group(function () {
     Route::post('/auth/logout', [App\Http\Controllers\Api\AuthController::class, 'logout'])->name('api.auth.logout');
     Route::post('/auth/change-password', [App\Http\Controllers\Api\AuthController::class, 'changePassword'])->name('api.auth.change');
-    Route::put('/user/profile', [App\Http\Controllers\Api\AuthController::class, 'updateProfile'])->name('api.user.profile');
+    Route::put('/user/profiles', [App\Http\Controllers\Api\AuthController::class, 'updateProfile'])->name('api.user.profile');
 });
 
 // Payment routes moved to web.php for CSRF compatibility
@@ -31,9 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
 // Image upload route (using Sanctum authentication)
 Route::post('/upload-image', [App\Http\Controllers\Api\UploadController::class, 'uploadImage'])->middleware('auth:sanctum')->name('api.upload-image');
 
-// Swagger UI and JSON via L5 Swagger controller
-Route::get('/docs', [\L5Swagger\Http\Controllers\SwaggerController::class, 'api'])->name('api.docs');
-Route::get('/docs/json', [\L5Swagger\Http\Controllers\SwaggerController::class, 'docs'])->name('api.docs.json');
+// Swagger removed
 
 // Webhook routes (no authentication required)
 Route::post('/webhook/piapi', [App\Http\Controllers\Api\PiapiWebhookController::class, 'handleWebhook'])->name('api.webhook.piapi');
@@ -54,3 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // My Files stats
     Route::get('/my-files/stats', [App\Http\Controllers\Api\UserController::class, 'myFilesStats'])->name('api.user.my-files.stats');
 });
+
+// Public Explore API
+Route::middleware([StripCsrfFromApi::class])->get('/explore', [App\Http\Controllers\Api\ExploreController::class, 'index'])
+    ->name('api.explore.index');

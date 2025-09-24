@@ -7,6 +7,9 @@
     "servers": [
         {
             "url": "/api"
+        },
+        {
+            "url": "api/"
         }
     ],
     "paths": {

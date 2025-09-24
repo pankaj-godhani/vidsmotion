@@ -15,16 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class UploadController extends Controller
 {
-    /**
-     * @OA\Info(version="1.0.0", title="VidsMotion API")
-     * @OA\Server(url="/api")
-     * @OA\SecurityScheme(
-     *   securityScheme="bearerAuth",
-     *   type="http",
-     *   scheme="bearer",
-     *   bearerFormat="JWT"
-     * )
-     */
+    
 
     private function getMetadataArray($metadata): array
     {

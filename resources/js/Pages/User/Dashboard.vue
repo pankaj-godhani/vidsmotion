@@ -213,12 +213,13 @@ const recentUploads = ref([])
 const searchQuery = ref('')
 
 const filteredUploads = computed(() => {
-    let filtered = recentUploads.value
+    let filtered = Array.isArray(recentUploads.value) ? recentUploads.value : []
 
     if (searchQuery.value) {
-        filtered = filtered.filter(upload =>
-            upload.original_filename.toLowerCase().includes(searchQuery.value.toLowerCase())
-        )
+        filtered = filtered.filter(upload => {
+            const name = (upload?.original_filename || upload?.filename || '').toString()
+            return name.toLowerCase().includes(searchQuery.value.toLowerCase())
+        })
     }
 
     return filtered
@@ -228,7 +229,13 @@ const filteredUploads = computed(() => {
 const loadStats = async () => {
     try {
         const response = await axios.get('/api/user/stats')
-        stats.value = response.data.data
+        const data = response.data?.data || {}
+        stats.value = {
+            totalUploads: data.total ?? 0,
+            completedUploads: data.completed ?? 0,
+            processingUploads: data.processing ?? 0,
+            failedUploads: data.failed ?? 0,
+        }
     } catch (error) {
         console.error('Failed to load stats:', error)
     }
@@ -237,7 +244,7 @@ const loadStats = async () => {
 const loadRecentUploads = async () => {
     try {
         const response = await axios.get('/api/user/uploads')
-        recentUploads.value = response.data.data
+        recentUploads.value = Array.isArray(response.data?.data) ? response.data.data : []
     } catch (error) {
         console.error('Failed to load uploads:', error)
     }
