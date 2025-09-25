@@ -676,8 +676,8 @@ const handleStandardSubscription = async () => {
         await loadRazorpayScript();
         console.log('Razorpay script loaded');
 
-        // Create order for Standard plan (₹50 for 7 days)
-        const order = await createRazorpayOrder(50, 'Standard');
+        // Create order for Standard plan (₹99 for 7 days)
+        const order = await createRazorpayOrder(99, 'Standard');
 
         // Open Razorpay payment modal
         openRazorpayPayment(
@@ -729,8 +729,8 @@ const handleProMonthlySubscription = async () => {
         await loadRazorpayScript();
         console.log('Razorpay script loaded');
 
-        // Create order for Pro Monthly plan (₹100)
-        const order = await createRazorpayOrder(100, 'Pro Monthly');
+        // Create order for Pro Monthly plan (₹299)
+        const order = await createRazorpayOrder(299, 'Pro Monthly');
 
         // Open Razorpay payment modal
         openRazorpayPayment(
@@ -782,8 +782,8 @@ const handlePremierYearlySubscription = async () => {
         await loadRazorpayScript();
         console.log('Razorpay script loaded');
 
-        // Create order for Premier Yearly plan (₹1100)
-        const order = await createRazorpayOrder(1100, 'Premier Yearly');
+        // Create order for Premier Yearly plan (₹3999)
+        const order = await createRazorpayOrder(3999, 'Premier Yearly');
 
         // Open Razorpay payment modal
         openRazorpayPayment(

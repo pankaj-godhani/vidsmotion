@@ -347,19 +347,19 @@ class PaymentController extends Controller
                 'type' => 'Standard',
                 'amount' => 99.00,
                 'duration_days' => 7,
-                'subscription_id' => 'sub_RGmRftCSxQxz1X'
+                'subscription_id' => 'plan_RLkdekMmp7MPNq'
             ],
             'Pro Monthly' => [
                 'type' => 'Pro Monthly',
                 'amount' => 299.00,
                 'duration_days' => 30,
-                'subscription_id' => 'sub_RGmS1mvLpdkjej'
+                'subscription_id' => 'plan_RLkeK02p6JmwOU'
             ],
             'Premier Yearly' => [
                 'type' => 'Premier Yearly',
                 'amount' => 3999.00,
                 'duration_days' => 365,
-                'subscription_id' => 'sub_RGmSOxU11fg088'
+                'subscription_id' => 'plan_RLkeYGnOcW1fsD'
             ],
             default => [
                 'type' => 'Unknown',
