@@ -89,3 +89,13 @@ Route::middleware([StripCsrfFromApi::class])->group(function () {
     Route::post('/create-razorpay-order', [App\Http\Controllers\PaymentController::class, 'createRazorpayOrder'])->name('payment.create-order');
     Route::post('/create-subscription', [App\Http\Controllers\PaymentController::class, 'createRazorpaySubscription'])->name('payment.create-subscription');
 });
+
+// Mobile Payment API routes (authenticated)
+Route::middleware([StripCsrfFromApi::class, 'auth:sanctum'])->group(function () {
+    Route::prefix('mobile/payment')->group(function () {
+        Route::get('/plans', [App\Http\Controllers\Api\MobilePaymentController::class, 'getPlans'])->name('api.mobile.plans');
+        Route::post('/create-order', [App\Http\Controllers\Api\MobilePaymentController::class, 'createOrder'])->name('api.mobile.create-order');
+        Route::post('/verify-payment', [App\Http\Controllers\Api\MobilePaymentController::class, 'verifyPayment'])->name('api.mobile.verify-payment');
+        Route::get('/history', [App\Http\Controllers\Api\MobilePaymentController::class, 'getPaymentHistory'])->name('api.mobile.payment-history');
+    });
+});
