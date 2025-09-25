@@ -88,7 +88,4 @@ Route::middleware([StripCsrfFromApi::class, 'auth:sanctum'])->group(function () 
 Route::middleware([StripCsrfFromApi::class])->group(function () {
     Route::post('/create-razorpay-order', [App\Http\Controllers\PaymentController::class, 'createRazorpayOrder'])->name('payment.create-order');
     Route::post('/create-subscription', [App\Http\Controllers\PaymentController::class, 'createRazorpaySubscription'])->name('payment.create-subscription');
-    Route::post('/payment-success', [App\Http\Controllers\PaymentController::class, 'handlePaymentSuccess'])
-        ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
-        ->name('payment.success');
 });

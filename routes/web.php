@@ -227,8 +227,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     })->name('uploads.show');
 });
 
-// Payment routes (moved from api.php for CSRF compatibility)
-// Removed from web.php; now defined in routes/api.php under StripCsrfFromApi
+// Payment routes (moved back to web.php for CSRF compatibility)
+Route::post('/api/payment-success', [App\Http\Controllers\PaymentController::class, 'handlePaymentSuccess'])->name('payment.success');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
