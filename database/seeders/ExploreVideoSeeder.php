@@ -13,7 +13,7 @@ class ExploreVideoSeeder extends Seeder
             [
                 'prompt' => 'A neon cyberpunk city street at night, rain reflections',
                 'thumbnail_url' => 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800',
-                'video_url' => 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4',
+                'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
                 'duration' => 5,
                 'resolution' => '720p',
                 'is_public' => true,
@@ -37,7 +37,7 @@ class ExploreVideoSeeder extends Seeder
             [
                 'prompt' => 'A serene waterfall in a lush forest, cinematic',
                 'thumbnail_url' => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800',
-                'video_url' => 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4',
+                'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
                 'duration' => 5,
                 'resolution' => '720p',
                 'is_public' => true,
@@ -98,9 +98,16 @@ class ExploreVideoSeeder extends Seeder
         ];
 
         $videoUrls = [
-            'https://samplelib.com/lib/preview/mp4/sample-5s.mp4',
-            'https://samplelib.com/lib/preview/mp4/sample-5s.mp4',
-            'https://samplelib.com/lib/preview/mp4/sample-5s.mp4',
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4',
         ];
 
         $categories = [
