@@ -40,7 +40,7 @@ Route::middleware([StripCsrfFromApi::class,'auth:sanctum'])->group(function () {
 // File processing routes moved to web.php for session-based authentication
 
 // Image upload route (using Sanctum authentication)
-Route::post('/upload-image', [App\Http\Controllers\Api\UploadController::class, 'uploadImage'])->middleware('auth:sanctum')->name('api.upload-image');
+Route::post('/upload-image', [App\Http\Controllers\Api\UploadController::class, 'uploadImage'])->middleware([StripCsrfFromApi::class, 'auth:sanctum'])->name('api.upload-image');
 
 // Swagger removed
 
