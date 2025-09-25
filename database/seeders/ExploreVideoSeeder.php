@@ -12,7 +12,7 @@ class ExploreVideoSeeder extends Seeder
         $samples = [
             [
                 'prompt' => 'A neon cyberpunk city street at night, rain reflections',
-                'thumbnail_url' => 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800',
+                'thumbnail_url' => 'https://picsum.photos/800/450?random=1',
                 'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
                 'duration' => 5,
                 'resolution' => '720p',
@@ -24,7 +24,7 @@ class ExploreVideoSeeder extends Seeder
             ],
             [
                 'prompt' => 'Flying through a colorful abstract particle field',
-                'thumbnail_url' => 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=800',
+                'thumbnail_url' => 'https://picsum.photos/800/450?random=2',
                 'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
                 'duration' => 5,
                 'resolution' => '1080p',
@@ -36,7 +36,7 @@ class ExploreVideoSeeder extends Seeder
             ],
             [
                 'prompt' => 'A serene waterfall in a lush forest, cinematic',
-                'thumbnail_url' => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800',
+                'thumbnail_url' => 'https://picsum.photos/800/450?random=3',
                 'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
                 'duration' => 5,
                 'resolution' => '720p',
@@ -48,7 +48,7 @@ class ExploreVideoSeeder extends Seeder
             ],
             [
                 'prompt' => 'Low-poly mountains at sunrise, stylized art',
-                'thumbnail_url' => 'https://images.unsplash.com/photo-1521335629791-ce4aec67dd53?q=80&w=800',
+                'thumbnail_url' => 'https://picsum.photos/800/450?random=4',
                 'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
                 'duration' => 5,
                 'resolution' => '1080p',
@@ -77,14 +77,14 @@ class ExploreVideoSeeder extends Seeder
         // Ensure at least 20 explore videos exist
         $resolutions = ['720p', '1080p'];
         $extraThumbs = [
-            'https://images.unsplash.com/photo-1517814763157-9cffbec72538?q=80&w=800',
-            'https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?q=80&w=800',
-            'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=800',
-            'https://images.unsplash.com/photo-1520975657283-c1dfc0f1f9f1?q=80&w=800',
-            'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800',
-            'https://images.unsplash.com/photo-1495567720989-cebdbdd97913?q=80&w=800',
-            'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=800',
-            'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=800',
+            'https://picsum.photos/800/450?random=5',
+            'https://picsum.photos/800/450?random=6',
+            'https://picsum.photos/800/450?random=7',
+            'https://picsum.photos/800/450?random=8',
+            'https://picsum.photos/800/450?random=9',
+            'https://picsum.photos/800/450?random=10',
+            'https://picsum.photos/800/450?random=11',
+            'https://picsum.photos/800/450?random=12',
         ];
         $extraPrompts = [
             'Cinematic drone shot over misty mountains',

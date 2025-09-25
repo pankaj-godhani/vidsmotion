@@ -95,11 +95,11 @@ class ExploreVideoController extends Controller
                 'likes_count' => $video->likes_count,
                 'tags' => $video->tags,
                 'created_at' => $video->created_at,
-                'user' => [
-                    //'id' => $video->user->id,
-                   // 'name' => $video->user->name,
-                   // 'avatar' => $video->user->avatar,
-                ],
+                'user' => $video->user ? [
+                    'id' => $video->user->id,
+                    'name' => $video->user->name,
+                    'avatar' => $video->user->avatar,
+                ] : null,
             ];
         });
 
