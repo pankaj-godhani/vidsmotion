@@ -83,3 +83,10 @@ Route::middleware([StripCsrfFromApi::class, 'auth:sanctum'])->group(function () 
     Route::delete('/explore-videos/{id}', [App\Http\Controllers\Api\ExploreVideoController::class, 'destroy'])->name('api.explore-videos.destroy');
     Route::get('/my-explore-videos', [App\Http\Controllers\Api\ExploreVideoController::class, 'myVideos'])->name('api.explore-videos.my-videos');
 });
+
+// Payment API routes (no CSRF, API-style)
+Route::middleware([StripCsrfFromApi::class])->group(function () {
+    Route::post('/create-razorpay-order', [App\Http\Controllers\PaymentController::class, 'createRazorpayOrder'])->name('payment.create-order');
+    Route::post('/create-subscription', [App\Http\Controllers\PaymentController::class, 'createRazorpaySubscription'])->name('payment.create-subscription');
+    Route::post('/payment-success', [App\Http\Controllers\PaymentController::class, 'handlePaymentSuccess'])->name('payment.success');
+});

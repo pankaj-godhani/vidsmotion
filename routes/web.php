@@ -228,9 +228,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
 });
 
 // Payment routes (moved from api.php for CSRF compatibility)
-Route::post('/api/create-razorpay-order', [App\Http\Controllers\PaymentController::class, 'createRazorpayOrder'])->name('payment.create-order');
-Route::post('/api/create-subscription', [App\Http\Controllers\PaymentController::class, 'createRazorpaySubscription'])->name('payment.create-subscription');
-Route::post('/api/payment-success', [App\Http\Controllers\PaymentController::class, 'handlePaymentSuccess'])->name('payment.success');
+// Removed from web.php; now defined in routes/api.php under StripCsrfFromApi
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
