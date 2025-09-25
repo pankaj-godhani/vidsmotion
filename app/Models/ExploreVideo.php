@@ -19,6 +19,8 @@ class ExploreVideo extends Model
         'likes_count',
         'tags',
         'description',
+        'original_filename',
+        'file_size',
     ];
 
     protected $casts = [

@@ -67,3 +67,19 @@ Route::middleware('auth:sanctum')->group(function () {
 // Public Explore API
 Route::middleware([StripCsrfFromApi::class])->get('/explore', [App\Http\Controllers\Api\ExploreController::class, 'index'])
     ->name('api.explore.index');
+
+// Explore Videos API
+Route::middleware([StripCsrfFromApi::class])->group(function () {
+    // Public routes
+    Route::get('/explore-videos', [App\Http\Controllers\Api\ExploreVideoController::class, 'index'])->name('api.explore-videos.index');
+    Route::get('/explore-videos/{id}', [App\Http\Controllers\Api\ExploreVideoController::class, 'show'])->name('api.explore-videos.show');
+    Route::post('/explore-videos/{id}/like', [App\Http\Controllers\Api\ExploreVideoController::class, 'toggleLike'])->name('api.explore-videos.like');
+});
+
+// Authenticated routes
+Route::middleware([StripCsrfFromApi::class, 'auth:sanctum'])->group(function () {
+    Route::post('/explore-videos', [App\Http\Controllers\Api\ExploreVideoController::class, 'store'])->name('api.explore-videos.store');
+    Route::put('/explore-videos/{id}', [App\Http\Controllers\Api\ExploreVideoController::class, 'update'])->name('api.explore-videos.update');
+    Route::delete('/explore-videos/{id}', [App\Http\Controllers\Api\ExploreVideoController::class, 'destroy'])->name('api.explore-videos.destroy');
+    Route::get('/my-explore-videos', [App\Http\Controllers\Api\ExploreVideoController::class, 'myVideos'])->name('api.explore-videos.my-videos');
+});

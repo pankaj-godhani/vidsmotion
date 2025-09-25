@@ -47,9 +47,10 @@
                             :disabled="isSorting"
                             class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <option value="latest">Latest</option>
-                            <option value="popular">Most Popular</option>
-                            <option value="trending">Trending</option>
+                            <option value="newest">Latest</option>
+                            <option value="oldest">Oldest</option>
+                            <option value="most_viewed">Most Viewed</option>
+                            <option value="most_liked">Most Liked</option>
                         </select>
 
                         <!-- AI Loader -->
@@ -272,7 +273,7 @@ const page = usePage();
 
 // Reactive data
 const activeFilter = ref('all');
-const sortBy = ref('latest');
+const sortBy = ref('newest');
 const selectedVideo = ref(null);
 const isLoadingMore = ref(false);
 const isSorting = ref(false);
@@ -283,11 +284,8 @@ const showUserMenu = ref(false);
 // Filters
 const filters = ref([
     { id: 'all', name: 'All' },
-    { id: 'cinematic', name: 'Cinematic' },
-    { id: 'realistic', name: 'Realistic' },
-    { id: 'anime', name: 'Anime' },
-    { id: 'cartoon', name: 'Cartoon' },
-    { id: 'artistic', name: 'Artistic' }
+    { id: 'recent', name: 'Recent' },
+    { id: 'popular', name: 'Popular' }
 ]);
 
 // Explore data (fetched from API)
@@ -360,48 +358,23 @@ const mapApiItem = (item) => {
     return {
         id: item.id,
         title: item.prompt || 'Untitled video',
-        author: item.author || 'Unknown',
-        thumbnail: item.thumbnail,
-        videoUrl: item.videoUrl,
+        author: item.user?.name || 'Unknown',
+        thumbnail: item.thumbnail_url,
+        videoUrl: item.video_url,
         duration: formatDuration(item.duration || 5),
-        views: formatViewsLabel(item.views || 0),
+        views: formatViewsLabel(item.views_count || 0),
         timeAgo: humanizeTimeAgo(item.created_at),
         category: (tags[0] || 'artistic').toLowerCase(),
+        likes: item.likes_count || 0,
+        description: item.description || '',
+        resolution: item.resolution || '720p',
     };
 };
 
 // Computed properties
 const filteredVideos = computed(() => {
-    let filtered = allVideos.value;
-
-    // Filter by category
-    if (activeFilter.value !== 'all') {
-        filtered = filtered.filter(video => video.category === activeFilter.value);
-    }
-
-    // Sort videos
-    switch (sortBy.value) {
-        case 'popular':
-            filtered = filtered.sort((a, b) => parseViews(b.views) - parseViews(a.views));
-            break;
-        case 'trending':
-            // For trending, we'll use a combination of views and recency
-            filtered = filtered.sort((a, b) => {
-                const viewsA = parseViews(a.views);
-                const viewsB = parseViews(b.views);
-                const timeA = parseTimeAgo(a.timeAgo);
-                const timeB = parseTimeAgo(b.timeAgo);
-                // Trending score: views / time factor (newer videos get higher score)
-                const scoreA = viewsA / timeA;
-                const scoreB = viewsB / timeB;
-                return scoreB - scoreA;
-            });
-            break;
-        default: // latest
-            filtered = filtered.sort((a, b) => parseTimeAgo(a.timeAgo) - parseTimeAgo(b.timeAgo));
-    }
-
-    return filtered;
+    // API handles filtering and sorting, so we just return the videos as-is
+    return allVideos.value;
 });
 
 const hasMoreVideos = computed(() => currentPage.value < lastPage.value);
@@ -415,7 +388,7 @@ const fetchExplore = async () => {
             sort: sortBy.value,
             filter: activeFilter.value,
         });
-        const { data } = await axios.get(`/api/explore?${params.toString()}`);
+        const { data } = await axios.get(`/api/explore-videos?${params.toString()}`);
         const items = data?.data?.items || [];
         allVideos.value = items.map(mapApiItem);
         currentPage.value = data?.data?.current_page || 1;
@@ -503,7 +476,7 @@ const loadMoreVideos = async () => {
             sort: sortBy.value,
             filter: activeFilter.value,
         });
-        const { data } = await axios.get(`/api/explore?${params.toString()}`);
+        const { data } = await axios.get(`/api/explore-videos?${params.toString()}`);
         const items = data?.data?.items || [];
         allVideos.value.push(...items.map(mapApiItem));
         currentPage.value = data?.data?.current_page || nextPage;

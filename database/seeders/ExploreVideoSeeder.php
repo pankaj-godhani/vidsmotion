@@ -60,10 +60,17 @@ class ExploreVideoSeeder extends Seeder
             ],
         ];
 
+        // Get a user ID for seeding (create a demo user if none exists)
+        $userId = \App\Models\User::first()?->id ?? \App\Models\User::create([
+            'name' => 'Demo User',
+            'email' => 'demo@example.com',
+            'password' => bcrypt('password'),
+        ])->id;
+
         // Seed base samples if table is empty
         if (ExploreVideo::count() === 0) {
             foreach ($samples as $data) {
-                ExploreVideo::create($data);
+                ExploreVideo::create(array_merge($data, ['user_id' => $userId]));
             }
         }
 
@@ -109,6 +116,7 @@ class ExploreVideoSeeder extends Seeder
             $videoUrl = $videoUrls[$i % count($videoUrls)];
 
             ExploreVideo::create([
+                'user_id' => $userId,
                 'prompt' => $prompt,
                 'thumbnail_url' => $thumb,
                 'video_url' => $videoUrl,

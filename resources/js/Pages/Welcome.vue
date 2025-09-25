@@ -53,7 +53,7 @@ const loadMoreVideos = async () => {
             sort: sortBy.value,
             filter: activeFilter.value,
         });
-        const { data } = await axios.get(`/api/explore?${params.toString()}`);
+        const { data } = await axios.get(`/api/explore-videos?${params.toString()}`);
         const items = data?.data?.items || [];
         allVideos.value.push(...items.map(mapApiItem));
         currentPage.value = data?.data?.current_page || next;
@@ -216,11 +216,11 @@ const mapApiItem = (item) => {
     return {
         id: item.id,
         title: item.prompt || 'Untitled video',
-        author: item.author || 'AI Creator',
-        thumbnail: item.thumbnail,
-        videoUrl: item.videoUrl,
+        author: item.user?.name || 'AI Creator',
+        thumbnail: item.thumbnail_url,
+        videoUrl: item.video_url,
         duration: formatDuration(item.duration || 5),
-        views: formatViewsLabel(item.views || 0),
+        views: formatViewsLabel(item.views_count || 0),
         timeAgo: humanizeTimeAgo(item.created_at),
     };
 };
@@ -230,10 +230,10 @@ const fetchExplore = async () => {
         const params = new URLSearchParams({
             page: String(currentPage.value),
             per_page: String(perPage.value),
-            sort: sortBy.value,
-            filter: activeFilter.value,
+            sort: 'newest',
+            filter: 'all',
         });
-        const { data } = await axios.get(`/api/explore?${params.toString()}`);
+        const { data } = await axios.get(`/api/explore-videos?${params.toString()}`);
         const items = data?.data?.items || [];
         allVideos.value = items.map(mapApiItem);
         currentPage.value = data?.data?.current_page || 1;
