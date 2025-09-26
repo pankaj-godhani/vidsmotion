@@ -214,7 +214,7 @@ const isActive = (routeName) => {
             <div class="pt-8 border-t border-gray-800">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <div class="text-gray-400 text-sm mb-4 md:mb-0">
-                        © 2025 Vidsmotion. All rights reserved. Built with Laravel v{{ laravelVersion }} (PHP v{{ phpVersion }})
+                        © 2025 Vidsmotion. All rights reserved. 
                     </div>
 
                     <!-- Social Links -->
