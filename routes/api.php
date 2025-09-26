@@ -99,3 +99,13 @@ Route::middleware([StripCsrfFromApi::class, 'auth:sanctum'])->group(function () 
         Route::get('/history', [App\Http\Controllers\Api\MobilePaymentController::class, 'getPaymentHistory'])->name('api.mobile.payment-history');
     });
 });
+
+// Mobile Video Generation API routes (authenticated)
+Route::middleware([StripCsrfFromApi::class, 'auth:sanctum'])->group(function () {
+    Route::prefix('mobile/video')->group(function () {
+        Route::post('/generate', [App\Http\Controllers\Api\MobileVideoGeneratorController::class, 'generateVideo'])->name('api.mobile.video.generate');
+        Route::get('/status/{task_id}', [App\Http\Controllers\Api\MobileVideoGeneratorController::class, 'checkStatus'])->name('api.mobile.video.status');
+        Route::get('/history', [App\Http\Controllers\Api\MobileVideoGeneratorController::class, 'getHistory'])->name('api.mobile.video.history');
+        Route::delete('/cancel/{task_id}', [App\Http\Controllers\Api\MobileVideoGeneratorController::class, 'cancelGeneration'])->name('api.mobile.video.cancel');
+    });
+});

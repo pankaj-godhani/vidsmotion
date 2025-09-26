@@ -30,6 +30,11 @@
       "key": "user_id",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "task_id",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -484,6 +489,117 @@
                   "value": "20"
                 }
               ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Mobile Video Generation",
+      "item": [
+        {
+          "name": "Generate Video",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prompt\": \"A beautiful sunset over mountains\",\n  \"duration\": 6,\n  \"image_url\": \"https://example.com/sunset.jpg\",\n  \"is_recreate\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/mobile/video/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "mobile", "video", "generate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check Video Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mobile/video/status/{{task_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "mobile", "video", "status", "{{task_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Video History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mobile/video/history?per_page=20&status=completed",
+              "host": ["{{base_url}}"],
+              "path": ["api", "mobile", "video", "history"],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "completed"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Video Generation",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mobile/video/cancel/{{task_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "mobile", "video", "cancel", "{{task_id}}"]
             }
           },
           "response": []
